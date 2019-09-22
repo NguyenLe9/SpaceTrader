@@ -38,7 +38,7 @@ public class SpaceTraderDriver extends JFrame {
      */
     public SpaceTraderDriver() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 750, 750);
+        setBounds(100, 100, 650, 665);
         contentPane = new JPanel();
         setContentPane(contentPane);
 
@@ -54,20 +54,22 @@ public class SpaceTraderDriver extends JFrame {
             //set background
             URL welcomeLink = new URL("https://bit.ly/2m6jU0U");
             Image icon1 = new ImageIcon(welcomeLink).getImage()
-              .getScaledInstance(750, 650, Image.SCALE_DEFAULT);
+              .getScaledInstance(650, 550, Image.SCALE_DEFAULT);
             JLabel background = new JLabel( new ImageIcon(icon1));
 
             //set label
-            text = new JLabel("WELCOME TO SPACE TRADER",SwingConstants.CENTER);
-            text.setFont(new Font("Verdana", Font.BOLD, 30));
-            text.setForeground(Color.CYAN);
-            text.setOpaque(true);
-            text.setBackground(Color.black);
+            startBanner = new JLabel("WELCOME TO SPACE TRADER",SwingConstants.CENTER);
+            startBanner.setSize(650,50);
+            startBanner.setFont(new Font("Verdana", Font.BOLD, 30));
+            startBanner.setForeground(Color.CYAN);
+            startBanner.setOpaque(true);
+            startBanner.setBackground(Color.black);
 
-            createLabelTimer(text);
+            createLabelTimer(startBanner);
 
             //set StartButton
             JButton startButton = new JButton("START");
+            startButton.setSize(650,50);
             startButton.setFont(new Font("Verdana", Font.BOLD, 25));
             startButton.setForeground(Color.CYAN);
             startButton.setOpaque(true);
