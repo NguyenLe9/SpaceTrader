@@ -85,7 +85,7 @@ public class SpaceTraderDriver extends JFrame {
             createButtonTimer(startButton);
 
             //add components
-            welcomeScreen.add(text,BorderLayout.NORTH);
+            welcomeScreen.add(startBanner,BorderLayout.NORTH);
             welcomeScreen.add(startButton,BorderLayout.SOUTH);
             welcomeScreen.add(background, BorderLayout.CENTER);
 
