@@ -118,7 +118,7 @@ public class SpaceTraderDriver extends JFrame {
            JTextField promptDiff = new JTextField("Difficulty:");
            setUpPromptDiff(promptDiff);
 
-           // set up radio buttons for selecting difficulty, default to normal
+           // set up radio buttons for selecting difficulty
            JRadioButton easyButton = new JRadioButton("Easy");
            JRadioButton normalButton = new JRadioButton("Normal");
            JRadioButton hardButton = new JRadioButton("Hard");
@@ -347,9 +347,7 @@ public class SpaceTraderDriver extends JFrame {
            e.printStackTrace();
        }
    }
-   public void setUpSkillField(JPanel skillField) {
 
-   }
    public void setUpSubmitButton(JButton submitButton) {
        submitButton.setSize(300,30);
        submitButton.setFont(new Font("Times New Roman", Font.PLAIN, 20));
