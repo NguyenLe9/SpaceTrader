@@ -11,7 +11,7 @@ public class SpaceTraderDriver extends JFrame {
     private JPanel configScreen;
     private JPanel confirmScreen;
     private JLabel startBanner;
-    private String name;
+    private String name = "Spock";
     private String difficulty;
     private JPanel skillPanel;
     private int credit;
@@ -107,7 +107,7 @@ public class SpaceTraderDriver extends JFrame {
             JTextField promptName = new JTextField("Name:");
             formatText(promptName, false, 500, 30);
 
-            JTextField nameField = new JTextField("Spock");
+            JTextField nameField = new JTextField(name);
             formatText(nameField, true, 500, 30);
 
             JPanel subNamePanel = new JPanel();
@@ -360,11 +360,17 @@ public class SpaceTraderDriver extends JFrame {
 
             JButton buttonBack = new JButton("Back");
             formatButton(buttonBack, 500, 30);
+            buttonBack.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    confirmScreen.setVisible(false);
+                    configScreen.setVisible(true);
+                }
+            });
             JButton buttonStart = new JButton("Start Game");
             formatButton(buttonStart, 500, 30);
 
             //=================================================================
-            // TODO: add functionality to the two option buttons
+            // TODO: add functionality to the start option button
             //=================================================================
 
             JPanel subOptionPanel = new JPanel();
