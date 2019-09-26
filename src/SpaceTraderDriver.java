@@ -11,7 +11,7 @@ public class SpaceTraderDriver extends JFrame {
     private JPanel configScreen;
     private JPanel confirmScreen;
     private JLabel startBanner;
-    private String name = "Spock";
+    private String name;
     private String difficulty;
     private JPanel skillPanel;
     private int credit;
