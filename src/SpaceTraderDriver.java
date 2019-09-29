@@ -10,13 +10,20 @@ public class SpaceTraderDriver extends JFrame {
     private JPanel welcomeScreen;
     private JPanel configScreen;
     private JPanel confirmScreen;
-    private JLabel startBanner;
+    private JPanel mapScreen;
+    // private Game game;
+    // private Region region;
+    // private Player player;
+
+    //=========================================================================
+    // TODO: Remove all the following private variables once the variables are
+    // moved to their proper classes.
+    //=========================================================================
     private String name;
-    private String difficulty;
-    private JPanel skillPanel;
     private int credit;
     private int skillPoints = 0;
     private int pPoint = 0, fPoint = 0, mPoint = 0, ePoint = 0;
+    private String difficulty;
 
     /**
      * Launch the application.
@@ -60,8 +67,8 @@ public class SpaceTraderDriver extends JFrame {
             JLabel background = new JLabel( new ImageIcon(icon1));
 
             //set label
-            startBanner = new JLabel("WELCOME TO SPACE TRADER",
-                              SwingConstants.CENTER);
+            JLabel startBanner = new JLabel("WELCOME TO SPACE TRADER",
+                                SwingConstants.CENTER);
             startBanner.setSize(650,50);
             startBanner.setFont(new Font("Verdana", Font.BOLD, 30));
             startBanner.setForeground(Color.CYAN);
@@ -107,7 +114,7 @@ public class SpaceTraderDriver extends JFrame {
             JTextField promptName = new JTextField("Name:");
             formatText(promptName, false, 500, 30);
 
-            JTextField nameField = new JTextField(name);
+            JTextField nameField = new JTextField("Spock");
             formatText(nameField, true, 500, 30);
 
             JPanel subNamePanel = new JPanel();
@@ -141,7 +148,7 @@ public class SpaceTraderDriver extends JFrame {
             formatText(promptSkill, false, 450, 30);
 
             // panel for distribution skill point
-            skillPanel = new JPanel();
+            JPanel skillPanel = new JPanel();
             skillPanel.setLayout(new GridLayout(4,0));
             JTextField pilotText = new JTextField("Pilot");
             JTextField pilotPoint = new JTextField("0");
@@ -368,10 +375,12 @@ public class SpaceTraderDriver extends JFrame {
             });
             JButton buttonStart = new JButton("Start Game");
             formatButton(buttonStart, 500, 30);
-
-            //=================================================================
-            // TODO: add functionality to the start option button
-            //=================================================================
+            buttonStart.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    confirmScreen.setVisible(false);
+                    setUpMap();
+                }
+            });
 
             JPanel subOptionPanel = new JPanel();
             subOptionPanel.setLayout(new GridLayout(1,2));
@@ -391,6 +400,97 @@ public class SpaceTraderDriver extends JFrame {
             confirmScreen.setBackground(Color.black);
             this.contentPane.add(confirmScreen);
             confirmScreen.setVisible(true);
+
+        } catch (java.net.MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setUpMap() {
+        try {
+            mapScreen = new JPanel();
+            mapScreen.setLayout(null);
+
+            //=================================================================
+            // TODO: figure out if we need different amounts of regions.
+            // Currently using 10 as a magic number for M4.
+            //=================================================================
+            JButton[] regionButton = new JButton[10];
+            for (int i = 0; i < regionButton.length; i++) {
+                regionButton[i] = new Region();
+                regionButton[i].setLocation(regionButton[i].getX(),
+                    regionButton[i].getY());
+                regionButton[i].addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        mapscree.setVisible(false);
+                        displayRegion(regionButton[i]);
+                    }
+                });
+                mapScreen.add(regionButton[i]);
+            }
+
+            mapScreen.setBackground(Color.black);
+            this.contentPane.add(mapScreen);
+            mapScreen.setVisible(true);
+
+        } catch (java.net.MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void displayRegion(Region region) {
+        try {
+            JPanel regionScreen = new JPanel();
+            regionScreen.setLayout(new GridLayout(0, 1));
+
+            JTextField regionName = new JTextField(region.getName());
+            formatText(regionName, false, 300, 30);
+
+            JTextField techLevel = new JTextField(region.getTechLevel());
+            formatText(techLevel, false, 300, 30);
+            JTextField coordinate = new JTextField("(" + region.getX() + ", "
+                + region.getY() + ")");
+            formatText(coordinate, false, 300, 30);
+            JTextField travelCost = new JTextField(region.getTravelCost());
+            formatText(travelCost, false, 300, 30);
+            JTextField distance = new JTextField(region.getDistance());
+            formatText(distance, false, 300, 30);
+
+            JButton backButton = new JButton("Back");
+            formatButton(backButton, 300, 30);
+            backButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    regionScreen.setVisible(false);
+                    mapScreen.setVisible(true);
+                }
+            });
+            JButton travelButton = new JButton("Travel");
+            formatButton(travelButton, 300, 30);
+            travelButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    regionScreen.setVisible(false);
+
+                    //=========================================================
+                    // TODO: add code that subtracts fuel from the player's
+                    // Ship and set the new screen to display the region
+                    //=========================================================
+                }
+            });
+
+            JPanel subRegionPanel = new JPanel();
+            subRegionPanel.setLayout(new GridLayout(0,2));
+            subRegionPanel.add(techLevel);
+            subRegionPanel.add(coordinate);
+            subRegionPanel.add(travelCost);
+            subRegionPanel.add(distance);
+            subRegionPanel.add(backButton);
+            subRegionPanel.add(travelButton);
+
+            regionScreen.add(regionName);
+            regionScreen.add(subRegionPanel);
+            regionScreen.setBackground(Color.black);
+            this.contentPane.add(regionScreen);
+            regionScreen.setVisible(true);
 
         } catch (java.net.MalformedURLException e) {
             e.printStackTrace();
