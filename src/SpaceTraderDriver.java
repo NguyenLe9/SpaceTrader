@@ -564,5 +564,9 @@ public class SpaceTraderDriver extends JFrame {
         ePoint = 0;
         engineer.setText("0");
     }
+    public void startGame(int pPoint, int mPoint, int ePoint,
+			  int fPoint, int credit, String difficulty) {
+        Game game = new Game(pPoint, mPoint, ePoint, fPoint, credit, difficulty);
 
+    }
 }
