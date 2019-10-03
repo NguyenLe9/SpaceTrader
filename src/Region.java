@@ -55,6 +55,18 @@ public class Region {
                 + "\nCoordinates: (" + this.x + ", " + this.y + ")\n";
     }
 
+    public int getX() {
+        return this.x;
+    }
+
+    public int getY() {
+        return this.y;
+    }
+
+    public TechLevel getTechLevel() {
+        return this.techLevel;
+    }
+
     public String getName() {
         return this.name;
     }
