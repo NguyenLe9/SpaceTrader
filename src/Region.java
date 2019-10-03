@@ -16,6 +16,7 @@ public class Region {
     private int y;
     private TechLevel techLevel;
     private String name;
+    private int index;
 
 
     public Region() {
@@ -69,5 +70,13 @@ public class Region {
 
     public String getName() {
         return this.name;
+    }
+
+    public int getIndex() {
+        return this.index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

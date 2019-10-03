@@ -1,6 +1,6 @@
 import java.util.HashSet;
 import java.util.List;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Set;
 
 public class Universe {
@@ -21,9 +21,10 @@ public class Universe {
 
     private Universe() {
         coordinatesHelper();
-        regions = new LinkedList<>();
+        regions = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Region newRegion = new Region();
+            newRegion.setIndex(i);
             regions.add(newRegion);
         }
     }
