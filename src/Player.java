@@ -32,7 +32,7 @@ public class Player {
     public void setName(String name) {
         this.name = name;
     }
-    public void setCurrentRegion(Region currentRegion) {
+    public void setCurrReg(Region currentRegion) {
         this.currentRegion = currentRegion;
     }
     public void setCredit(int credit) {
@@ -50,7 +50,7 @@ public class Player {
     public int getePoint() {
         return this.ePoint;
     }
-    public Region getCurrentRegion() {
+    public Region getCurrReg() {
         return this.currentRegion;
     }
     public int getCredit() {

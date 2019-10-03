@@ -30,8 +30,8 @@ public class Region {
     private int index;
 
     public Region() {
-        this.x = generateCoords(Universe.xCoords);
-        this.y = generateCoords(Universe.yCoords);
+        this.x = generateCoords(Universe.getXCoord());
+        this.y = generateCoords(Universe.getYCoord());
         this.techLevel = generateTechLevel();
         this.name = generateName();
     }
@@ -42,8 +42,8 @@ public class Region {
     }
 
     private int generateCoords(Set<Integer> coords) {
-        int temp = (int) ((Math.random() * 400));
-        // int temp = (int) (-200 + (Math.random() * 400));
+        // int temp = (int) ((Math.random() * 400));
+        int temp = (int) (-200 + (Math.random() * 400));
         if (coords.contains(temp)) {
             for (int i = 0; i <= 5; i++) {
                 coords.remove(temp + i);
@@ -59,7 +59,7 @@ public class Region {
     private String generateName() {
         int rand = (int) (Math.random() * 99);
         int h = this.hashCode() % 100;
-        return this.techLevel.name().substring(0,3) + h + rand;
+        return this.techLevel.name().substring(0, 3) + h + rand;
     }
 
     // public String toString() {
@@ -87,6 +87,9 @@ public class Region {
 
     public String getName() {
         return this.name;
+    }
+    public String getCoord() {
+        return "(" + this.x + ", " + this.y + ")";
     }
 
     public int getIndex() {

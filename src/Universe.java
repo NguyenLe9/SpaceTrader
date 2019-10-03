@@ -9,12 +9,12 @@ public class Universe {
     private static List<Region> regions;
     private final Random random = new Random();
 
-    public static Set<Integer> xCoords = new HashSet<>(400);
-    public static Set<Integer> yCoords = new HashSet<>(400);
+    private static Set<Integer> xCoords = new HashSet<>(400);
+    private static Set<Integer> yCoords = new HashSet<>(400);
 
     private static void coordinatesHelper() {
-        // for (int i = -200; i <= 200; i++) {
-        for (int i = 0; i <= 400; i++) {
+        // for (int i = 0; i <= 400; i++) {
+        for (int i = -200; i <= 200; i++) {
             xCoords.add(i);
             yCoords.add(i);
         }
@@ -44,6 +44,12 @@ public class Universe {
 
     public List<Region> getRegionList() {
         return this.regions;
+    }
+    public static Set<Integer> getXCoord() {
+        return xCoords;
+    }
+    public static Set<Integer> getYCoord() {
+        return yCoords;
     }
     // public String toString() {
     //     String regs = "";
