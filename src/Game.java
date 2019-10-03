@@ -1,34 +1,43 @@
 public class Game {
-    Player player;
+    private Universe universe;
+    private Player player;
     private String difficulty;
-    public enum Region {
-        ASGARD, EARTH, JOTUNHEIM, VANAHEIM,
-	    SOVEREIGNWORLD, EGO, MORAG, TITAN, XANDAR, GARDEN
-	    }
-    public enum TechLevel { PREAG, AGRICULTURE, MEDIEVAL,
-	    RENAISSANCE, INDUSTRIAL, MODERN, FUTURISTIC}
-    public Game(int pPoint, int mPoint, int ePoint,
-		int fPoint, int credit, String difficulty) {
-        this.setUpPlayer(pPoint, mPoint, ePoint, fPoint, credit);
-        this.setUpDifficulty(difficulty);
-        Universe universe = new Universe();
+
+    // public enum Region {
+    //     ASGARD, EARTH, JOTUNHEIM, VANAHEIM,
+	   //  SOVEREIGNWORLD, EGO, MORAG, TITAN, XANDAR, GARDEN
+    // }
+    public Game(int pPoint, int mPoint, int ePoint,int fPoint, int credit,
+            String difficulty) {
+        this.universe = Universe.getUniverse();
+        this.player = new Player(pPoint, fPoint, mPoint, ePoint, credit,
+            universe.pickRandomRegion());
+        this.setDifficulty(difficulty);
     }
-    public void setUpPlayer
-	(int pPoint, int mPoint, int ePoint, int fPoint, int credit) {
-        player.setpPoint(pPoint);
-        player.setmPoint(mPoint);
-        player.setePoint(ePoint);
-        player.setfPoint(fPoint);
-        player.setCredit(credit);
-        player.setCurrentRegion(this.getRandomRegionName());
+    // public Region getRandomRegionName() {
+    //     Region name = Region.values()[(int)(Math.random()*
+    //         Region.values().length)];
+    //     return name;
+    // }
+    public double getDistance(Region destination) {
+        return java.lang.Math.sqrt(Math.pow(this.player.getCurrentRegion().getX() - destination.getX(),2) +
+                                   Math.pow(this.player.getCurrentRegion().getY() - destination.getY(), 2));
     }
-    public Region getRandomRegionName() {
-        Region name = Region.values()
-	    [(int)(Math.random()*Region.values().length)];
-        return name;
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
-    public void setUpDifficulty(String difficulty) {
+    public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
+    }
+    public Player getPlayer() {
+        return this.player;
+    }
+    public String getDifficulty() {
+        return this.difficulty;
+    }
+    public Universe getUniverse() {
+        return this.universe;
     }
 
 }

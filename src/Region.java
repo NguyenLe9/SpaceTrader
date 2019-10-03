@@ -1,4 +1,3 @@
-import java.util.HashSet;
 import java.util.Set;
 
 public class Region {
@@ -10,6 +9,18 @@ public class Region {
         INDUSTRIAL,
         MODERN,
         FUTURISTIC;
+    }
+    public enum Name {
+        ASGARD,
+        EARTH,
+        JOTUNHEIM,
+        VANAHEIM,
+        SOVEREIGNWORLD,
+        EGO,
+        MORAG,
+        TITAN,
+        XANDAR,
+        GARDEN;
     }
 
     private int x;
@@ -51,10 +62,16 @@ public class Region {
         return this.techLevel.name().substring(0,3) + h + rand;
     }
 
-    public String toString() {
-        return "Name: " + this.name + "\nTech Level: " + this.techLevel
-                + "\nCoordinates: (" + this.x + ", " + this.y + ")\n";
-    }
+    // public String toString() {
+    //     return "Name: " + this.name + "\nTech Level: " + this.techLevel
+    //             + "\nCoordinates: (" + this.x + ", " + this.y + ")\n";
+    // }
+
+    // public static Name generateName() {
+    //     Name name = Name.values()[(int)(Math.random()*
+    //         Name.values().length)];
+    //     return name;
+    // }
 
     public int getX() {
         return this.x;

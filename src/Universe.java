@@ -2,10 +2,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.Random;
 
 public class Universe {
     private final String name = "SpaceTrader";
     private static List<Region> regions;
+    private final Random random = new Random();
 
     public static Set<Integer> xCoords = new HashSet<>(400);
     public static Set<Integer> yCoords = new HashSet<>(400);
@@ -35,17 +37,23 @@ public class Universe {
         }
         return newUniverse;
     }
-
-    public String toString() {
-        String regs = "";
-        for (Region region : regions) {
-            regs += region.getName() + " ";
-        }
-        return "Universe name: " + name + "\nRegions: " + regs;
+    public Region pickRandomRegion() {
+        return regions.get(random.nextInt(regions.size() + 1));
     }
 
-    public static void main(String[] args) {
-        Universe newUniverse = Universe.getUniverse();
-        System.out.println(newUniverse);
+    public List<Region> getRegionList() {
+        return this.regions;
     }
+    // public String toString() {
+    //     String regs = "";
+    //     for (Region region : regions) {
+    //         regs += region.getName() + " ";
+    //     }
+    //     return "Universe name: " + name + "\nRegions: " + regs;
+    // }
+
+    // public static void main(String[] args) {
+    //     Universe newUniverse = Universe.getUniverse();
+    //     System.out.println(newUniverse);
+    // }
 }
