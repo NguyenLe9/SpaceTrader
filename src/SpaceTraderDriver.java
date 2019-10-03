@@ -83,7 +83,7 @@ public class SpaceTraderDriver extends JFrame {
             startButton.addActionListener(new ActionListener() {
                 public void actionPerformed(final ActionEvent e) {
                     welcomeScreen.setVisible(false);
-                    contentPane.remove(welcomeScreen);
+                    // contentPane.remove(welcomeScreen);
                     setUpConfigScreen();
                 }
             });
@@ -305,7 +305,7 @@ public class SpaceTraderDriver extends JFrame {
                     if (easyButton.isSelected() || normalButton.isSelected()
                             || hardButton.isSelected()) {
                         configScreen.setVisible(false);
-                        contentPane.remove(configScreen);
+                        // contentPane.remove(configScreen);
                         setUpConfirmationScreen();
                     }
                 }
@@ -372,7 +372,7 @@ public class SpaceTraderDriver extends JFrame {
             buttonBack.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     confirmScreen.setVisible(false);
-                    contentPane.remove(confirmScreen);
+                    // contentPane.remove(confirmScreen);
                     configScreen.setVisible(true);
                 }
             });
@@ -381,8 +381,8 @@ public class SpaceTraderDriver extends JFrame {
             buttonStart.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     confirmScreen.setVisible(false);
-                    contentPane.remove(confirmScreen);
-                    game = startGame(pPoint,fPoint,mPoint,ePoint,credit,difficulty);
+                    // contentPane.remove(confirmScreen);
+                    game = new Game(pPoint,fPoint,mPoint,ePoint,credit,difficulty);
                     setUpMap();
                 }
             });
@@ -419,36 +419,31 @@ public class SpaceTraderDriver extends JFrame {
 
     public void setUpMap() {
         mapScreen = new JPanel();
-        mapScreen.setLayout(null);
-        contentPane.setBackground(Color.BLACK);
+        mapScreen.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
 
-        //=================================================================
-        // TODO: figure out if we need different amounts of regions.
-        // Currently using 10 as a magic number for M4.
-        //=================================================================
-
-        displayRegion(this.game.getUniverse().getRegionList().get(0));
-
-        JButton[] regionButton = new JButton[10];
+        JButton[] regionButton = new JButton[this.game.getUniverse().getRegionList().size()];
         for (int i = 0; i < regionButton.length; i++) {
             regionButton[i] = new JButton(this.game.getUniverse()
                 .getRegionList().get(i).getName());
             formatButton(regionButton[i], 300, 30);
             regionButton[i].setLocation(regionButton[i].getX(),
                 regionButton[i].getY());
+            // System.out.println(regionButton[i].getX() + "   " + regionButton[i].getY());
+            gbc.gridx = this.game.getUniverse().getRegionList().get(i).getX();
+            gbc.gridy = this.game.getUniverse().getRegionList().get(i).getY();
 
             Region reg = game.getUniverse().getRegionList().get(i);
             regionButton[i].addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     mapScreen.setVisible(false);
-                    contentPane.remove(mapScreen);
+                    // contentPane.remove(mapScreen);
                     displayRegion(reg);
                 }
             });
-            mapScreen.add(regionButton[i]);
+            mapScreen.add(regionButton[i],gbc);
         }
 
-        mapScreen.setBackground(Color.BLACK);
         this.contentPane.add(mapScreen);
         mapScreen.setVisible(true);
     }
@@ -461,15 +456,15 @@ public class SpaceTraderDriver extends JFrame {
         JTextField regionName = new JTextField(region.getName());
         formatText(regionName, false, 300, 30);
 
-        JTextField techLevel = new JTextField("" + region.getTechLevel());
+        JTextField techLevel = new JTextField("Tech Level: " + region.getTechLevel());
         formatText(techLevel, false, 300, 30);
-        JTextField coordinate = new JTextField("(" + region.getX() + ", "
+        JTextField coordinate = new JTextField("Coordinates: (" + region.getX() + ", "
             + region.getY() + ")");
         formatText(coordinate, false, 300, 30);
         // JTextField travelCost = new JTextField(region.getTravelCost());
-        JTextField travelCost = new JTextField("Very Costly");
+        JTextField travelCost = new JTextField("Cost: Very Costly");
         formatText(travelCost, false, 300, 30);
-        JTextField distance = new JTextField("" + this.game.getDistance(region));
+        JTextField distance = new JTextField("Distance: " + this.game.getDistance(region));
         formatText(distance, false, 300, 30);
 
         JButton backButton = new JButton("Back");
@@ -477,7 +472,7 @@ public class SpaceTraderDriver extends JFrame {
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 regionScreen.setVisible(false);
-                mapScreen.setVisible(true);
+                setUpMap();
             }
         });
         JButton travelButton = new JButton("Travel");
@@ -485,25 +480,35 @@ public class SpaceTraderDriver extends JFrame {
         travelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 regionScreen.setVisible(false);
+                //=============================================================
+                // TODO: add things to do in each region. Current code only
+                // supports traveling from point A to point B and then
+                // immediately displaying the mapScreen again
+                //=============================================================
 
-                //=========================================================
+                //=============================================================
                 // TODO: add code that subtracts fuel from the player's
                 // Ship and set the new screen to display the region
-                //=========================================================
+                //=============================================================
+
+                game.getPlayer().setCurrentRegion(region);
+                setUpMap();
             }
         });
 
         JPanel subRegionPanel = new JPanel();
         subRegionPanel.setLayout(new GridLayout(0,2));
-        subRegionPanel.add(techLevel);
-        subRegionPanel.add(coordinate);
-        subRegionPanel.add(travelCost);
-        subRegionPanel.add(distance);
         subRegionPanel.add(backButton);
         subRegionPanel.add(travelButton);
 
         regionScreen.add(regionName);
+        regionScreen.add(techLevel);
+        regionScreen.add(coordinate);
+        regionScreen.add(travelCost);
+        regionScreen.add(distance);
         regionScreen.add(subRegionPanel);
+        // regionScreen.add(backButton);
+        // regionScreen.add(travelButton);
         regionScreen.setBackground(Color.BLACK);
         this.contentPane.add(regionScreen);
         regionScreen.setVisible(true);
@@ -580,8 +585,8 @@ public class SpaceTraderDriver extends JFrame {
         ePoint = 0;
         engineer.setText("0");
     }
-    public Game startGame(int pPoint, int mPoint, int ePoint,
-              int fPoint, int credit, String difficulty) {
-        return new Game(pPoint, mPoint, ePoint, fPoint, credit, difficulty);
-    }
+    // public Game startGame(int pPoint, int mPoint, int ePoint,
+    //           int fPoint, int credit, String difficulty) {
+    //     return new Game(pPoint, mPoint, ePoint, fPoint, credit, difficulty);
+    // }
 }

@@ -29,7 +29,6 @@ public class Region {
     private String name;
     private int index;
 
-
     public Region() {
         this.x = generateCoords(Universe.xCoords);
         this.y = generateCoords(Universe.yCoords);
@@ -43,7 +42,8 @@ public class Region {
     }
 
     private int generateCoords(Set<Integer> coords) {
-        int temp = (int) (-200 + (Math.random() * 400));
+        int temp = (int) ((Math.random() * 400));
+        // int temp = (int) (-200 + (Math.random() * 400));
         if (coords.contains(temp)) {
             for (int i = 0; i <= 5; i++) {
                 coords.remove(temp + i);

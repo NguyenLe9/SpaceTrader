@@ -13,7 +13,8 @@ public class Universe {
     public static Set<Integer> yCoords = new HashSet<>(400);
 
     private static void coordinatesHelper() {
-        for (int i = -200; i <= 200; i++) {
+        // for (int i = -200; i <= 200; i++) {
+        for (int i = 0; i <= 400; i++) {
             xCoords.add(i);
             yCoords.add(i);
         }
