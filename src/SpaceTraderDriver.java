@@ -12,6 +12,7 @@ public class SpaceTraderDriver extends JFrame {
     private JPanel confirmScreen;
     private JPanel mapScreen;
     private JPanel regionScreen;
+    private JPanel confirmTravelScreen;
     private Game game;
     // these variables will be kept for use in initializing the game
     private String name;
@@ -50,8 +51,6 @@ public class SpaceTraderDriver extends JFrame {
 
     public void setUpWelcomeScreen() {
         try {
-            welcomeScreen = new JPanel();
-            welcomeScreen.setLayout(new BorderLayout());
             //set background
             URL welcomeLink = new URL("https://bit.ly/2m6jU0U");
             Image icon1 = new ImageIcon(welcomeLink).getImage()
@@ -81,12 +80,13 @@ public class SpaceTraderDriver extends JFrame {
             startButton.addActionListener(new ActionListener() {
                 public void actionPerformed(final ActionEvent e) {
                     welcomeScreen.setVisible(false);
-                    // contentPane.remove(welcomeScreen);
                     setUpConfigScreen();
                 }
             });
             // createButtonTimer(startButton);
 
+            welcomeScreen = new JPanel();
+            welcomeScreen.setLayout(new BorderLayout());
             //add components
             welcomeScreen.add(startBanner, BorderLayout.NORTH);
             welcomeScreen.add(startButton, BorderLayout.SOUTH);
@@ -100,9 +100,6 @@ public class SpaceTraderDriver extends JFrame {
     }
     public void setUpConfigScreen() {
         try {
-            configScreen = new JPanel();
-            configScreen.setLayout(new GridLayout(0, 2));
-
             // prompt for name
             JTextField promptName = new JTextField("Name:");
             formatText(promptName, false, 500, 30);
@@ -126,6 +123,7 @@ public class SpaceTraderDriver extends JFrame {
             JTextField engineerPoint = new JTextField("0");
             for (int i = 0; i < skillDis.length; i++) {
                 JTextField skillText = new JTextField(skillName[i]);
+                formatText(skillText, false, 300, 30, Color.BLACK, Color.WHITE);
                 JButton minus = new JButton("-");
                 int skillIndex = i;
                 minus.addActionListener(new ActionListener() {
@@ -178,14 +176,8 @@ public class SpaceTraderDriver extends JFrame {
             for (int i = 0; i < diff.length; i++) {
                 diffGroup.add(diff[i]);
                 radioPanel.add(diff[i]);
-                int allocSkill;
-                if (i == 0) {
-                    allocSkill = 16;
-                } else if (i == 1) {
-                    allocSkill = 12;
-                } else {
-                    allocSkill = 8;
-                }
+                // calculate skill points allowed, might have to change magic 16
+                int allocSkill = 16 - i * 4;
                 diff[i].addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         skillPoints = allocSkill;
@@ -217,7 +209,6 @@ public class SpaceTraderDriver extends JFrame {
                     if (diff[0].isSelected() || diff[1].isSelected()
                             || diff[2].isSelected()) {
                         configScreen.setVisible(false);
-                        // contentPane.remove(configScreen);
                         setUpConfirmationScreen();
                     }
                 }
@@ -231,15 +222,28 @@ public class SpaceTraderDriver extends JFrame {
 
             JLabel configScreenInput = new JLabel();
             configScreenInput.setLayout(new GridLayout(4, 1));
-
             configScreenInput.add(subNamePanel);
             configScreenInput.add(subDiffPanel);
             configScreenInput.add(subSkillPanel);
             configScreenInput.add(buttonSubmit);
             configScreenInput.setBackground(Color.BLACK);
 
+            configScreen = new JPanel();
+            configScreen.setLayout(new GridLayout(0, 2));
             configScreen.add(background);
             configScreen.add(configScreenInput);
+
+            // GridBagConstraints gbc = new GridBagConstraints();
+            // configScreen = new JPanel();
+            // configScreen.setLayout(new GridBagLayout());
+            // gbc.fill = GridBagConstraints.HORIZONTAL;
+            // gbc.gridx = 0;
+            // gbc.gridy = 0;
+            // configScreen.add(background, gbc);
+            // gbc.gridx = 0;
+            // gbc.gridy = 1;
+            // gbc.anchor = GridBagConstraints.PAGE_END;
+            // configScreen.add(configScreenInput, gbc);
             this.contentPane.add(configScreen);
             configScreen.setVisible(true);
 
@@ -250,9 +254,6 @@ public class SpaceTraderDriver extends JFrame {
 
     public void setUpConfirmationScreen() {
         try {
-            confirmScreen = new JPanel();
-            confirmScreen.setLayout(new GridLayout(1, 2));
-
             // print out all relevant info
             JTextField confirmText
                     = new JTextField("Please confirm your entry");
@@ -283,7 +284,6 @@ public class SpaceTraderDriver extends JFrame {
             buttonBack.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     confirmScreen.setVisible(false);
-                    // contentPane.remove(confirmScreen);
                     configScreen.setVisible(true);
                 }
             });
@@ -292,9 +292,7 @@ public class SpaceTraderDriver extends JFrame {
             buttonStart.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     confirmScreen.setVisible(false);
-                    // contentPane.remove(confirmScreen);
                     game = new Game(skillDis, credit, difficulty);
-                    // setUpMapScreen();
                     setUpRegionScreen();
                 }
             });
@@ -319,6 +317,8 @@ public class SpaceTraderDriver extends JFrame {
             confirmScreenInput.add(subOptionPanel);
             confirmScreenInput.setBackground(Color.BLACK);
 
+            confirmScreen = new JPanel();
+            confirmScreen.setLayout(new GridLayout(1, 2));
             confirmScreen.add(background);
             confirmScreen.add(confirmScreenInput);
             this.contentPane.add(confirmScreen);
@@ -331,16 +331,13 @@ public class SpaceTraderDriver extends JFrame {
 
     public void setUpRegionScreen() {
         // try {
-            regionScreen = new JPanel();
-            regionScreen.setLayout(new GridLayout(2, 3));
-
-            JTextField regionName = new JTextField(this.game.getPlayer()
+            JTextField regionName = new JTextField(game.getPlayer()
                 .getCurrReg().getName());
             formatText(regionName, false, 300, 30);
-            JTextField regionTech = new JTextField("" + this.game.getPlayer()
+            JTextField regionTech = new JTextField("" + game.getPlayer()
                 .getCurrReg().getTechLevel());
             formatText(regionTech, false, 300, 30);
-            JTextField regionCoord = new JTextField(this.game.getPlayer()
+            JTextField regionCoord = new JTextField(game.getPlayer()
                 .getCurrReg().getCoord());
             formatText(regionCoord, false, 300, 30);
 
@@ -379,6 +376,9 @@ public class SpaceTraderDriver extends JFrame {
             //         .getScaledInstance(IMAGEX, IMAGEY, Image.SCALE_DEFAULT);
             // JLabel regionDisplay = new JLabel(new ImageIcon(icon));
             // regionDisplay.setOpaque(true);
+
+            regionScreen = new JPanel();
+            regionScreen.setLayout(new GridLayout(2, 3));
             // regionScreen.add(regionDisplay);
             regionScreen.add(regionInfo);
             regionScreen.add(playerAction);
@@ -391,46 +391,76 @@ public class SpaceTraderDriver extends JFrame {
     }
 
     public void setUpMapScreen() {
-        mapScreen = new JPanel();
+
+        GridBagConstraints gbc = new GridBagConstraints();
         // still restrained to a grid based layout unfortunately, but we can
         // freely place the regions in relation to each other on a grid
-        mapScreen.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
+        JPanel mapDisplay = new JPanel();
+        mapDisplay.setLayout(new GridBagLayout());
 
-        JButton[] regionButton = new JButton[this.game.getUniverse()
+        JButton[] regionButton = new JButton[game.getUniverse()
             .getRegionList().size()];
         for (int i = 0; i < regionButton.length; i++) {
-            regionButton[i] = new JButton(this.game.getUniverse()
+            regionButton[i] = new JButton(game.getUniverse()
                 .getRegionList().get(i).getName());
-            formatButton(regionButton[i], 300, 30);
+            formatButton(regionButton[i], 20, 20);
             regionButton[i].setLocation(regionButton[i].getX(),
                 regionButton[i].getY());
-            // System.out.println(regionButton[i].getX() + "   "
-            //    + regionButton[i].getY());
-            gbc.gridx = this.game.getUniverse().getRegionList().get(i).getX()
-                + 400;
-            gbc.gridy = this.game.getUniverse().getRegionList().get(i).getY()
-                + 400;
+            gbc.gridx = game.getUniverse().getRegionList().get(i).getX() + 200;
+            gbc.gridy = game.getUniverse().getRegionList().get(i).getY() + 200;
 
             Region reg = game.getUniverse().getRegionList().get(i);
             regionButton[i].addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     mapScreen.setVisible(false);
-                    // contentPane.remove(mapScreen);
-                    displayRegion(reg);
+                    confirmTravelScreen(reg);
                 }
             });
-            mapScreen.add(regionButton[i], gbc);
+            mapDisplay.add(regionButton[i], gbc);
         }
+
+        JTextField playerLocName = new JTextField("Current Location: " + game
+            .getPlayer().getCurrReg().getName());
+        formatText(playerLocName, false, 300, 30);
+        JTextField playerLocCoord = new JTextField("Current Coordinates: "
+            + game.getPlayer().getCurrReg().getCoord());
+        formatText(playerLocCoord, false, 300, 30);
+        JPanel subInfoPanel = new JPanel();
+        subInfoPanel.setLayout(new GridLayout(2, 0));
+        subInfoPanel.add(playerLocName);
+        subInfoPanel.add(playerLocCoord);
+
+        JButton cancelTravel = new JButton("Back");
+        formatButton(cancelTravel, 300, 30);
+        cancelTravel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                mapScreen.setVisible(false);
+                setUpRegionScreen();
+            }
+        });
+
+        JPanel infoAndOption = new JPanel();
+        infoAndOption.setLayout(new GridLayout(1, 0));
+        infoAndOption.add(subInfoPanel);
+        infoAndOption.add(cancelTravel);
+
+        mapScreen = new JPanel();
+        mapScreen.setLayout(new GridBagLayout());
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        mapScreen.add(mapDisplay, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.PAGE_END;
+        gbc.insets = new Insets(50, 0, 0, 0);
+        mapScreen.add(infoAndOption, gbc);
 
         this.contentPane.add(mapScreen);
         mapScreen.setVisible(true);
     }
 
-    public void displayRegion(Region region) {
-        JPanel regionScreen = new JPanel();
-        regionScreen.setLayout(new GridLayout(0, 1));
-
+    public void confirmTravelScreen(Region region) {
         JTextField regionName = new JTextField(region.getName());
         formatText(regionName, false, 300, 30);
         JTextField techLevel = new JTextField("Tech Level: "
@@ -443,14 +473,14 @@ public class SpaceTraderDriver extends JFrame {
         JTextField travelCost = new JTextField("Cost: Very Costly");
         formatText(travelCost, false, 300, 30);
         JTextField distance = new JTextField("Distance: "
-            + this.game.getDistance(region));
+            + game.getDistance(region));
         formatText(distance, false, 300, 30);
 
         JButton backButton = new JButton("Back");
         formatButton(backButton, 300, 30);
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                regionScreen.setVisible(false);
+                confirmTravelScreen.setVisible(false);
                 setUpMapScreen();
             }
         });
@@ -458,7 +488,7 @@ public class SpaceTraderDriver extends JFrame {
         formatButton(travelButton, 300, 30);
         travelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                regionScreen.setVisible(false);
+                confirmTravelScreen.setVisible(false);
                 //=============================================================
                 // add things to do in each region. Current code only
                 // supports traveling from point A to point B and then
@@ -480,15 +510,17 @@ public class SpaceTraderDriver extends JFrame {
         subRegionPanel.add(backButton);
         subRegionPanel.add(travelButton);
 
-        regionScreen.add(regionName);
-        regionScreen.add(techLevel);
-        regionScreen.add(coordinate);
-        regionScreen.add(travelCost);
-        regionScreen.add(distance);
-        regionScreen.add(subRegionPanel);
-        regionScreen.setBackground(Color.BLACK);
-        this.contentPane.add(regionScreen);
-        regionScreen.setVisible(true);
+        confirmTravelScreen = new JPanel();
+        confirmTravelScreen.setLayout(new GridLayout(0, 1));
+        confirmTravelScreen.add(regionName);
+        confirmTravelScreen.add(techLevel);
+        confirmTravelScreen.add(coordinate);
+        confirmTravelScreen.add(travelCost);
+        confirmTravelScreen.add(distance);
+        confirmTravelScreen.add(subRegionPanel);
+        confirmTravelScreen.setBackground(Color.BLACK);
+        this.contentPane.add(confirmTravelScreen);
+        confirmTravelScreen.setVisible(true);
     }
 
     // public void createLabelTimer(JLabel text) {
@@ -520,18 +552,25 @@ public class SpaceTraderDriver extends JFrame {
     //     blinkingTimer.start();
     // }
 
-    public void formatButton(JButton b, int x, int y) {
+    public void formatButton(JButton b, int x, int y, Color fore, Color back) {
         b.setSize(x, y);
         b.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        b.setForeground(Color.CYAN);
-        b.setBackground(Color.BLACK);
+        b.setForeground(fore);
+        b.setBackground(back);
     }
-    public void formatText(JTextField t, boolean editable, int x, int y) {
+    public void formatButton(JButton b, int x, int y) {
+        formatButton(b, x, y, Color.CYAN, Color.BLACK);
+    }
+    public void formatText(JTextField t, boolean editable, int x, int y,
+            Color fore, Color back) {
         t.setSize(x, y);
         t.setEditable(editable);
         t.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        t.setForeground(Color.CYAN);
-        t.setBackground(Color.BLACK);
+        t.setForeground(fore);
+        t.setBackground(back);
+    }
+    public void formatText(JTextField t, boolean editable, int x, int y) {
+        formatText(t, editable, x, y, Color.CYAN, Color.BLACK);
     }
     public void storeName(String name) {
         this.name = name;
