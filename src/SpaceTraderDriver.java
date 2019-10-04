@@ -236,10 +236,9 @@ public class SpaceTraderDriver extends JFrame {
             // gbc.gridx = 0;
             // gbc.gridy = 0;
             // configScreen.add(background, gbc);
-            // gbc.gridx = 0;
             // gbc.gridy = 1;
-            // gbc.anchor = GridBagConstraints.PAGE_END;
             // configScreen.add(configScreenInput, gbc);
+
             this.contentPane.add(configScreen);
             configScreen.setVisible(true);
 
@@ -386,10 +385,15 @@ public class SpaceTraderDriver extends JFrame {
             JLabel display = new JLabel(new ImageIcon(reg));
             display.setOpaque(true);
 
+            GridBagConstraints gbc = new GridBagConstraints();
             regionScreen = new JPanel();
-            regionScreen.setLayout(new GridLayout(0, 2));
-            regionScreen.add(display);
-            regionScreen.add(regionInfo);
+            regionScreen.setLayout(new GridBagLayout());
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            regionScreen.add(display, gbc);
+            gbc.gridy = 3;
+            regionScreen.add(regionInfo, gbc);
             this.contentPane.add(regionScreen);
             regionScreen.setVisible(true);
 
