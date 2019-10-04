@@ -380,6 +380,38 @@ public class SpaceTraderDriver extends JFrame {
             // JLabel regionDisplay = new JLabel(new ImageIcon(icon));
             // regionDisplay.setOpaque(true);
             // regionScreen.add(regionDisplay);
+            URL region0 = new URL("https://i.imgur.com/uyBgo1S.jpg");
+            URL region1 = new URL("https://i.imgur.com/M8xsqLO.jpg");
+            URL region2 = new URL("https://i.imgur.com/t2XMP9V.jpg");
+            URL region3 = new URL("https://i.imgur.com/WNamirI.jpg");
+            URL region4 = new URL("https://i.imgur.com/T55viT0.jpg");
+            URL region5 = new URL("https://i.imgur.com/E8Rtkbb.jpg");
+            URL region6 = new URL("https://i.imgur.com/Lo54og6.jpg");
+            URL region7 = new URL("https://i.imgur.com/dtWtKTq.jpg");
+            URL region8 = new URL("https://i.imgur.com/ipCacCK.jpg");
+            URL region9 = new URL("https://i.imgur.com/01x9hFu.jpg");
+
+            URL[] images = new URL[10];
+            images[0] = region0;
+            images[1] = region1;
+            images[2] = region2;
+            images[3] = region3;
+            images[4] = region4;
+            images[5] = region5;
+            images[6] = region6;
+            images[7] = region7;
+            images[8] = region8;
+            images[9] = region9;
+
+            int regionIndex = this.game.getPlayer()
+                .getCurrReg().getIndex();
+            Image reg = new ImageIcon(images[regionIndex]).getImage().
+                    getScaledInstance(300, 400, Image.SCALE_DEFAULT);
+            
+            JLabel display = new JLabel(new ImageIcon(reg));
+            display.setOpaque(true);
+            
+            regionScreen.add(display);
             regionScreen.add(regionInfo);
             regionScreen.add(playerAction);
             this.contentPane.add(regionScreen);
