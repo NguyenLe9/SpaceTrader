@@ -92,7 +92,6 @@ public class SpaceTraderDriver extends JFrame {
             welcomeScreen.add(startButton, BorderLayout.SOUTH);
             welcomeScreen.add(background, BorderLayout.CENTER);
 
-
             this.contentPane.add(welcomeScreen);
         } catch (java.net.MalformedURLException e) {
             e.printStackTrace();
@@ -159,16 +158,14 @@ public class SpaceTraderDriver extends JFrame {
                 }
                 skillPanel.add(plus);
             }
-
             JPanel subSkillPanel = new JPanel();
             subSkillPanel.setLayout(new GridLayout(1, 2));
             subSkillPanel.add(promptSkill);
             subSkillPanel.add(skillPanel);
 
-            // prompt for difficulty
+            // prompt for difficulty using radio buttons
             JTextField promptDiff = new JTextField("Difficulty:");
             formatText(promptDiff, false, 500, 30);
-            // set up radio buttons for selecting difficulty
             JRadioButton[] diff = {new JRadioButton("Easy"),
                 new JRadioButton("Normal"), new JRadioButton("Hard")};
             ButtonGroup diffGroup = new ButtonGroup();
@@ -190,7 +187,6 @@ public class SpaceTraderDriver extends JFrame {
             subDiffPanel.setLayout(new GridLayout(1, 2));
             subDiffPanel.add(promptDiff);
             subDiffPanel.add(radioPanel);
-
             // submit info about name, difficulty, and skills selected
             JButton buttonSubmit = new JButton("Submit");
             formatButton(buttonSubmit, 300, 30);
@@ -330,7 +326,7 @@ public class SpaceTraderDriver extends JFrame {
     }
 
     public void setUpRegionScreen() {
-        // try {
+        try {
             JTextField regionName = new JTextField(game.getPlayer()
                 .getCurrReg().getName());
             formatText(regionName, false, 300, 30);
@@ -341,11 +337,11 @@ public class SpaceTraderDriver extends JFrame {
                 .getCurrReg().getCoord());
             formatText(regionCoord, false, 300, 30);
 
-            JPanel regionInfo = new JPanel();
-            regionInfo.setLayout(new GridLayout(0, 3));
-            regionInfo.add(regionName);
-            regionInfo.add(regionTech);
-            regionInfo.add(regionCoord);
+            JPanel subRegionInfo = new JPanel();
+            subRegionInfo.setLayout(new GridLayout(0, 3));
+            subRegionInfo.add(regionName);
+            subRegionInfo.add(regionTech);
+            subRegionInfo.add(regionCoord);
 
             JButton tradeButton = new JButton("Trade");
             formatButton(tradeButton, 300, 30);
@@ -365,61 +361,41 @@ public class SpaceTraderDriver extends JFrame {
             playerAction.setLayout(new GridLayout(0, 2));
             playerAction.add(tradeButton);
             playerAction.add(travelButton);
-            //=================================================================
-            // Add a picture to each region, would probably need an array to
-            // store the picture and we can pull them up as necessary. Once the
-            // image is add, uncomment the try catch in this method
-            //=================================================================
 
-            // URL configLink = new URL("INSERT URL HERE");
-            // Image icon = new ImageIcon(configLink).getImage()
-            //         .getScaledInstance(IMAGEX, IMAGEY, Image.SCALE_DEFAULT);
-            // JLabel regionDisplay = new JLabel(new ImageIcon(icon));
-            // regionDisplay.setOpaque(true);
+            JPanel regionInfo = new JPanel();
+            regionInfo.setLayout(new GridLayout(2, 1));
+            regionInfo.add(subRegionInfo);
+            regionInfo.add(playerAction);
 
-            regionScreen = new JPanel();
-            regionScreen.setLayout(new GridLayout(2, 3));
-            // regionScreen.add(regionDisplay);
-            URL region0 = new URL("https://i.imgur.com/uyBgo1S.jpg");
-            URL region1 = new URL("https://i.imgur.com/M8xsqLO.jpg");
-            URL region2 = new URL("https://i.imgur.com/t2XMP9V.jpg");
-            URL region3 = new URL("https://i.imgur.com/WNamirI.jpg");
-            URL region4 = new URL("https://i.imgur.com/T55viT0.jpg");
-            URL region5 = new URL("https://i.imgur.com/E8Rtkbb.jpg");
-            URL region6 = new URL("https://i.imgur.com/Lo54og6.jpg");
-            URL region7 = new URL("https://i.imgur.com/dtWtKTq.jpg");
-            URL region8 = new URL("https://i.imgur.com/ipCacCK.jpg");
-            URL region9 = new URL("https://i.imgur.com/01x9hFu.jpg");
-
-            URL[] images = new URL[10];
-            images[0] = region0;
-            images[1] = region1;
-            images[2] = region2;
-            images[3] = region3;
-            images[4] = region4;
-            images[5] = region5;
-            images[6] = region6;
-            images[7] = region7;
-            images[8] = region8;
-            images[9] = region9;
+            URL[] images = {new URL("https://i.imgur.com/uyBgo1S.jpg"),
+                            new URL("https://i.imgur.com/M8xsqLO.jpg"),
+                            new URL("https://i.imgur.com/t2XMP9V.jpg"),
+                            new URL("https://i.imgur.com/WNamirI.jpg"),
+                            new URL("https://i.imgur.com/T55viT0.jpg"),
+                            new URL("https://i.imgur.com/E8Rtkbb.jpg"),
+                            new URL("https://i.imgur.com/Lo54og6.jpg"),
+                            new URL("https://i.imgur.com/dtWtKTq.jpg"),
+                            new URL("https://i.imgur.com/ipCacCK.jpg"),
+                            new URL("https://i.imgur.com/01x9hFu.jpg")};
 
             int regionIndex = this.game.getPlayer()
                 .getCurrReg().getIndex();
             Image reg = new ImageIcon(images[regionIndex]).getImage().
                     getScaledInstance(300, 400, Image.SCALE_DEFAULT);
-            
+
             JLabel display = new JLabel(new ImageIcon(reg));
             display.setOpaque(true);
-            
+
+            regionScreen = new JPanel();
+            regionScreen.setLayout(new GridLayout(0, 2));
             regionScreen.add(display);
             regionScreen.add(regionInfo);
-            regionScreen.add(playerAction);
             this.contentPane.add(regionScreen);
             regionScreen.setVisible(true);
 
-        // } catch (java.net.MalformedURLException e) {
-        //     e.printStackTrace();
-        // }
+        } catch (java.net.MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setUpMapScreen() {
@@ -501,8 +477,16 @@ public class SpaceTraderDriver extends JFrame {
         JTextField coordinate = new JTextField("Coordinates: (" + region.getX()
             + ", " + region.getY() + ")");
         formatText(coordinate, false, 300, 30);
-        // JTextField travelCost = new JTextField(region.getTravelCost());
-        JTextField travelCost = new JTextField("Cost: Very Costly");
+        int diffMult;
+        if (game.getDifficulty() == "Easy") {
+            diffMult = 1;
+        } else if (game.getDifficulty() == "Normal") {
+            diffMult = 2;
+        } else {
+            diffMult = 3;
+        }
+        JTextField travelCost = new JTextField("Cost: "
+            + game.getDistance(region) * diffMult);
         formatText(travelCost, false, 300, 30);
         JTextField distance = new JTextField("Distance: "
             + game.getDistance(region));
@@ -521,12 +505,6 @@ public class SpaceTraderDriver extends JFrame {
         travelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 confirmTravelScreen.setVisible(false);
-                //=============================================================
-                // add things to do in each region. Current code only
-                // supports traveling from point A to point B and then
-                // immediately displaying the mapScreen again
-                //=============================================================
-
                 //=============================================================
                 // add code that subtracts fuel from the player's
                 // Ship and set the new screen to display the region
