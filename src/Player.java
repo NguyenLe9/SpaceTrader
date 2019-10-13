@@ -3,6 +3,7 @@ public class Player {
     private int fPoint;
     private int mPoint;
     private int ePoint;
+    // private int[] skills;
     private int credit;
     private String name;
     private Region currentRegion;
@@ -16,18 +17,31 @@ public class Player {
         this.credit = credit;
         this.currentRegion = currentRegion;
     }
+    // public Player(int[] skills, int credit, String name, Region currentRegion) {
+    //     this.skills = skills;
+    //     this.credit = credit;
+    //     this.name = name;
+    //     this.currentRegion = currentRegion;
+    // }
 
     public void setpPoint(int pPoint) {
         this.pPoint = pPoint;
+        // this.skills[0] = pPoint;
     }
     public void setfPoint(int fPoint) {
         this.fPoint = fPoint;
+        // this.skills[1] = fPoint;
     }
     public void setmPoint(int mPoint) {
         this.mPoint = mPoint;
+        // this.skills[2] = mPoint;
     }
     public void setePoint(int ePoint) {
         this.ePoint = ePoint;
+        // this.skills[3] = ePoint
+    }
+    public void setCredit(int credit) {
+        this.credit = credit;
     }
     public void setName(String name) {
         this.name = name;
@@ -35,29 +49,30 @@ public class Player {
     public void setCurrReg(Region currentRegion) {
         this.currentRegion = currentRegion;
     }
-    public void setCredit(int credit) {
-        this.credit = credit;
-    }
     public int getpPoint() {
         return this.pPoint;
+        // return this.skills[0];
     }
     public int getfPoint() {
         return this.fPoint;
+        // return this.skills[1];
     }
     public int getmPoint() {
         return this.mPoint;
+        // return this.skills[2];
     }
     public int getePoint() {
         return this.ePoint;
-    }
-    public Region getCurrReg() {
-        return this.currentRegion;
+        // return this.skills[3];
     }
     public int getCredit() {
         return this.credit;
     }
     public String getName() {
         return this.name;
+    }
+    public Region getCurrReg() {
+        return this.currentRegion;
     }
 
 

@@ -3,6 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 import java.net.URL;
+import java.io.*;
 
 public class SpaceTraderDriver extends JFrame {
 
@@ -21,6 +22,7 @@ public class SpaceTraderDriver extends JFrame {
     private String[] skillName = {"Pilot", "Fighter", "Merchant", "Engineer"};
     private int[] skillDis = new int[4];
     private String difficulty;
+    private Region targetedRegion;
 
     // Launch the application.
     public static void main(final String[] args) {
@@ -39,8 +41,7 @@ public class SpaceTraderDriver extends JFrame {
     // Create the frame.
     public SpaceTraderDriver() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setBounds(100, 100, 650, 665);
+        setBounds(100, 100, 850, 650);
         contentPane = new JPanel();
         setContentPane(contentPane);
         setBackground(Color.BLUE);
@@ -54,7 +55,7 @@ public class SpaceTraderDriver extends JFrame {
             //set background
             URL welcomeLink = new URL("https://bit.ly/2m6jU0U");
             Image icon1 = new ImageIcon(welcomeLink).getImage()
-                    .getScaledInstance(650, 550, Image.SCALE_DEFAULT);
+                    .getScaledInstance(850, 535, Image.SCALE_DEFAULT);
             JLabel background = new JLabel(new ImageIcon(icon1));
 
             //set label
@@ -66,7 +67,7 @@ public class SpaceTraderDriver extends JFrame {
             startBanner.setOpaque(true);
             startBanner.setBackground(Color.BLACK);
 
-            // createLabelTimer(startBanner);
+            createLabelTimer(startBanner);
 
             //set StartButton
             JButton startButton = new JButton("START");
@@ -83,7 +84,7 @@ public class SpaceTraderDriver extends JFrame {
                     setUpConfigScreen();
                 }
             });
-            // createButtonTimer(startButton);
+            createButtonTimer(startButton);
 
             welcomeScreen = new JPanel();
             welcomeScreen.setLayout(new BorderLayout());
@@ -97,6 +98,7 @@ public class SpaceTraderDriver extends JFrame {
             e.printStackTrace();
         }
     }
+
     public void setUpConfigScreen() {
         try {
             // prompt for name
@@ -104,10 +106,6 @@ public class SpaceTraderDriver extends JFrame {
             formatText(promptName, false, 500, 30);
             JTextField nameField = new JTextField("Spock");
             formatText(nameField, true, 500, 30);
-            JPanel subNamePanel = new JPanel();
-            subNamePanel.setLayout(new GridLayout(1, 2));
-            subNamePanel.add(promptName);
-            subNamePanel.add(nameField);
 
             // prompt for skill distribution
             JTextField promptSkill = new JTextField("Select Difficulty");
@@ -122,7 +120,8 @@ public class SpaceTraderDriver extends JFrame {
             JTextField engineerPoint = new JTextField("0");
             for (int i = 0; i < skillDis.length; i++) {
                 JTextField skillText = new JTextField(skillName[i]);
-                formatText(skillText, false, 300, 30, Color.BLACK, Color.WHITE);
+                formatText(skillText, false, 200, 30, Color.BLACK, Color.WHITE);
+                skillText.setFont(new Font("Times New Roman", Font.PLAIN, 15));
                 JButton minus = new JButton("-");
                 int skillIndex = i;
                 minus.addActionListener(new ActionListener() {
@@ -158,10 +157,6 @@ public class SpaceTraderDriver extends JFrame {
                 }
                 skillPanel.add(plus);
             }
-            JPanel subSkillPanel = new JPanel();
-            subSkillPanel.setLayout(new GridLayout(1, 2));
-            subSkillPanel.add(promptSkill);
-            subSkillPanel.add(skillPanel);
 
             // prompt for difficulty using radio buttons
             JTextField promptDiff = new JTextField("Difficulty:");
@@ -183,11 +178,7 @@ public class SpaceTraderDriver extends JFrame {
                     }
                 });
             }
-            JPanel subDiffPanel = new JPanel();
-            subDiffPanel.setLayout(new GridLayout(1, 2));
-            subDiffPanel.add(promptDiff);
-            subDiffPanel.add(radioPanel);
-            // submit info about name, difficulty, and skills selected
+
             JButton buttonSubmit = new JButton("Submit");
             formatButton(buttonSubmit, 300, 30);
             buttonSubmit.addActionListener(new ActionListener() {
@@ -210,39 +201,35 @@ public class SpaceTraderDriver extends JFrame {
                 }
             });
 
-            URL configLink = new URL("https://bit.ly/2kWR8je");
-            Image icon1 = new ImageIcon(configLink).getImage()
-                .getScaledInstance(750, 500, Image.SCALE_DEFAULT);
-            JLabel background = new JLabel(new ImageIcon(icon1));
+            Image image = javax.imageio.ImageIO.read(
+                new File("Graphics/spaceman.jpg"))
+                .getScaledInstance(440, 610, Image.SCALE_DEFAULT);
+            JLabel background = new JLabel(new ImageIcon(image));
             background.setOpaque(true);
 
-            JLabel configScreenInput = new JLabel();
-            configScreenInput.setLayout(new GridLayout(4, 1));
-            configScreenInput.add(subNamePanel);
-            configScreenInput.add(subDiffPanel);
-            configScreenInput.add(subSkillPanel);
-            configScreenInput.add(buttonSubmit);
-            configScreenInput.setBackground(Color.BLACK);
-
             configScreen = new JPanel();
-            configScreen.setLayout(new GridLayout(0, 2));
-            configScreen.add(background);
-            configScreen.add(configScreenInput);
-
-            // GridBagConstraints gbc = new GridBagConstraints();
-            // configScreen = new JPanel();
-            // configScreen.setLayout(new GridBagLayout());
-            // gbc.fill = GridBagConstraints.HORIZONTAL;
-            // gbc.gridx = 0;
-            // gbc.gridy = 0;
-            // configScreen.add(background, gbc);
-            // gbc.gridy = 1;
-            // configScreen.add(configScreenInput, gbc);
+            configScreen.setLayout(new GridBagLayout());
+            addWithGBC(configScreen, background,
+                new int[] {0, 0, 1, 4, 0, 0});
+            addWithGBC(configScreen, promptName,
+                new int[] {1, 0, 1, 1, 80, 110});
+            addWithGBC(configScreen, nameField,
+                new int[] {2, 0, 1, 1, 0, 0});
+            addWithGBC(configScreen, promptDiff,
+                new int[] {1, 1, 1, 1, 0, 110});
+            addWithGBC(configScreen, radioPanel,
+                new int[] {2, 1, 1, 1, 0, 0});
+            addWithGBC(configScreen, promptSkill,
+                new int[] {1, 2, 1, 1, 0, 140});
+            addWithGBC(configScreen, skillPanel,
+                new int[] {2, 2, 1, 1, 0, 0});
+            addWithGBC(configScreen, buttonSubmit,
+                new int[] {1, 3, 2, 1, 120, 0});
 
             this.contentPane.add(configScreen);
             configScreen.setVisible(true);
 
-        } catch (java.net.MalformedURLException e) {
+        } catch (java.io.IOException e) {
             e.printStackTrace();
         }
     }
@@ -268,12 +255,6 @@ public class SpaceTraderDriver extends JFrame {
                     + "   Engineer: " + skillDis[3]);
             formatText(confirmSkill, false, 500, 30);
 
-            JPanel subConfPanel = new JPanel();
-            subConfPanel.setLayout(new GridLayout(1, 3));
-            subConfPanel.add(confirmName);
-            subConfPanel.add(confirmDiff);
-            subConfPanel.add(confirmCredit);
-
             JButton buttonBack = new JButton("Back");
             formatButton(buttonBack, 500, 30);
             buttonBack.addActionListener(new ActionListener() {
@@ -292,130 +273,131 @@ public class SpaceTraderDriver extends JFrame {
                 }
             });
 
-            JPanel subOptionPanel = new JPanel();
-            subOptionPanel.setLayout(new GridLayout(1, 2));
-            subOptionPanel.add(buttonBack);
-            subOptionPanel.add(buttonStart);
-
-            URL configLink = new URL("https://bit.ly/2kWR8je");
-            Image icon1 = new ImageIcon(configLink).getImage()
-                    .getScaledInstance(750, 500, Image.SCALE_DEFAULT);
-            JLabel background = new JLabel(new ImageIcon(icon1));
+            Image image = javax.imageio.ImageIO.read(
+                new File("Graphics/spaceman.jpg"))
+                .getScaledInstance(440, 610, Image.SCALE_DEFAULT);
+            JLabel background = new JLabel(new ImageIcon(image));
             background.setOpaque(true);
 
-            JPanel confirmScreenInput = new JPanel();
-            confirmScreenInput.setLayout(new GridLayout(4, 0));
-
-            confirmScreenInput.add(confirmText);
-            confirmScreenInput.add(subConfPanel);
-            confirmScreenInput.add(confirmSkill);
-            confirmScreenInput.add(subOptionPanel);
-            confirmScreenInput.setBackground(Color.BLACK);
-
             confirmScreen = new JPanel();
-            confirmScreen.setLayout(new GridLayout(1, 2));
-            confirmScreen.add(background);
-            confirmScreen.add(confirmScreenInput);
+            confirmScreen.setLayout(new GridBagLayout());
+            addWithGBC(confirmScreen, background,
+                new int[] {0, 0, 1, 6, 0, 0});
+            addWithGBC(confirmScreen, confirmText,
+                new int[] {1, 0, 2, 1, 183, 70});
+            addWithGBC(confirmScreen, confirmName,
+                new int[] {1, 1, 2, 1, 0, 70});
+            addWithGBC(confirmScreen, confirmDiff,
+                new int[] {1, 2, 2, 1, 0, 70});
+            addWithGBC(confirmScreen, confirmSkill,
+                new int[] {1, 3, 2, 1, 0, 70});
+            addWithGBC(confirmScreen, confirmCredit,
+                new int[] {1, 4, 2, 1, 0, 70});
+            addWithGBC(confirmScreen, buttonBack,
+                new int[] {1, 5, 1, 1, 100, 70});
+            addWithGBC(confirmScreen, buttonStart,
+                new int[] {2, 5, 1, 1, 0, 0});
             this.contentPane.add(confirmScreen);
             confirmScreen.setVisible(true);
 
-        } catch (java.net.MalformedURLException e) {
+        } catch (java.io.IOException e) {
             e.printStackTrace();
         }
     }
 
     public void setUpRegionScreen() {
-        try {
-            JTextField regionName = new JTextField(game.getPlayer()
-                .getCurrReg().getName());
-            formatText(regionName, false, 300, 30);
-            JTextField regionTech = new JTextField("" + game.getPlayer()
-                .getCurrReg().getTechLevel());
-            formatText(regionTech, false, 300, 30);
-            JTextField regionCoord = new JTextField(game.getPlayer()
-                .getCurrReg().getCoord());
-            formatText(regionCoord, false, 300, 30);
+        JTextField regionName = new JTextField(game.getPlayer()
+            .getCurrReg().getName());
+        formatText(regionName, false, 300, 30);
+        JTextField regionTech = new JTextField("" + game.getPlayer()
+            .getCurrReg().getTechLevel());
+        formatText(regionTech, false, 300, 30);
+        JTextField regionCoord = new JTextField(game.getPlayer()
+            .getCurrReg().getCoord());
+        formatText(regionCoord, false, 300, 30);
 
-            JPanel subRegionInfo = new JPanel();
-            subRegionInfo.setLayout(new GridLayout(0, 3));
-            subRegionInfo.add(regionName);
-            subRegionInfo.add(regionTech);
-            subRegionInfo.add(regionCoord);
+        JPanel subRegionInfo = new JPanel();
+        subRegionInfo.setLayout(new GridLayout(0, 3));
+        subRegionInfo.add(regionName);
+        subRegionInfo.add(regionTech);
+        subRegionInfo.add(regionCoord);
 
-            JButton tradeButton = new JButton("Trade");
-            formatButton(tradeButton, 300, 30);
-            //=================================================================
-            // implement functionality for the trade button
-            //=================================================================
-            JButton travelButton = new JButton("Travel");
-            formatButton(travelButton, 300, 30);
-            travelButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    regionScreen.setVisible(false);
-                    setUpMapScreen();
-                }
-            });
+        JButton tradeButton = new JButton("Trade");
+        formatButton(tradeButton, 300, 30);
+        //=================================================================
+        // implement functionality for the trade button
+        //=================================================================
+        JButton travelButton = new JButton("Travel");
+        formatButton(travelButton, 300, 30);
+        travelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                regionScreen.setVisible(false);
+                setUpMapScreen();
+            }
+        });
 
-            JPanel playerAction = new JPanel();
-            playerAction.setLayout(new GridLayout(0, 2));
-            playerAction.add(tradeButton);
-            playerAction.add(travelButton);
+        JPanel playerAction = new JPanel();
+        playerAction.setLayout(new GridLayout(0, 2));
+        playerAction.add(tradeButton);
+        playerAction.add(travelButton);
 
-            JPanel regionInfo = new JPanel();
-            regionInfo.setLayout(new GridLayout(2, 1));
-            regionInfo.add(subRegionInfo);
-            regionInfo.add(playerAction);
+        JPanel regionInfo = new JPanel();
+        regionInfo.setLayout(new GridLayout(2, 1));
+        regionInfo.add(subRegionInfo);
+        regionInfo.add(playerAction);
 
-            URL[] images = {new URL("https://i.imgur.com/uyBgo1S.jpg"),
-                            new URL("https://i.imgur.com/M8xsqLO.jpg"),
-                            new URL("https://i.imgur.com/t2XMP9V.jpg"),
-                            new URL("https://i.imgur.com/WNamirI.jpg"),
-                            new URL("https://i.imgur.com/T55viT0.jpg"),
-                            new URL("https://i.imgur.com/E8Rtkbb.jpg"),
-                            new URL("https://i.imgur.com/Lo54og6.jpg"),
-                            new URL("https://i.imgur.com/dtWtKTq.jpg"),
-                            new URL("https://i.imgur.com/ipCacCK.jpg"),
-                            new URL("https://i.imgur.com/01x9hFu.jpg")};
+        Image reg = game.getPlayer().getCurrReg().getImage().
+                getScaledInstance(300, 400, Image.SCALE_DEFAULT);
+        JLabel display = new JLabel(new ImageIcon(reg));
+        display.setOpaque(true);
 
-            int regionIndex = this.game.getPlayer()
-                .getCurrReg().getIndex();
-            Image reg = new ImageIcon(images[regionIndex]).getImage().
-                    getScaledInstance(300, 400, Image.SCALE_DEFAULT);
-
-            JLabel display = new JLabel(new ImageIcon(reg));
-            display.setOpaque(true);
-
-            GridBagConstraints gbc = new GridBagConstraints();
-            regionScreen = new JPanel();
-            regionScreen.setLayout(new GridBagLayout());
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            regionScreen.add(display, gbc);
-            gbc.gridy = 3;
-            regionScreen.add(regionInfo, gbc);
-            this.contentPane.add(regionScreen);
-            regionScreen.setVisible(true);
-
-        } catch (java.net.MalformedURLException e) {
-            e.printStackTrace();
-        }
+        GridBagConstraints gbc = new GridBagConstraints();
+        regionScreen = new JPanel();
+        regionScreen.setLayout(new GridBagLayout());
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        regionScreen.add(display, gbc);
+        gbc.gridy = 3;
+        regionScreen.add(regionInfo, gbc);
+        this.contentPane.add(regionScreen);
+        regionScreen.setVisible(true);
     }
 
     public void setUpMapScreen() {
-
         GridBagConstraints gbc = new GridBagConstraints();
-        // still restrained to a grid based layout unfortunately, but we can
-        // freely place the regions in relation to each other on a grid
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        JLabel targetImage = new JLabel(new ImageIcon(game.getPlayer()
+            .getCurrReg().getImage().getScaledInstance(300, 400,
+            Image.SCALE_DEFAULT)));
+        JTextField targetName = new JTextField("Name:\t" + game.getPlayer()
+            .getCurrReg().getName());
+        formatText(targetName, false, 0, 0);
+        JTextField targetLoc = new JTextField("Location:\t" + game.getPlayer()
+            .getCurrReg().getCoord());
+        formatText(targetLoc, false, 0, 0);
+        JTextField targetTech = new JTextField("Tech Level:\t" + game
+            .getPlayer().getCurrReg().getTechLevel());
+        formatText(targetTech, false, 0, 0);
+        JTextField targetCost = new JTextField("Cost:\t0.00");
+        formatText(targetCost, false, 0, 0);
+
+        JPanel targetInfo = new JPanel();
+        targetInfo.setLayout(new GridLayout(0, 1));
+        targetInfo.add(targetName);
+        targetInfo.add(targetLoc);
+        targetInfo.add(targetTech);
+        targetInfo.add(targetCost);
+
         JPanel mapDisplay = new JPanel();
         mapDisplay.setLayout(new GridBagLayout());
 
         JButton[] regionButton = new JButton[game.getUniverse()
             .getRegionList().size()];
         for (int i = 0; i < regionButton.length; i++) {
-            regionButton[i] = new JButton(game.getUniverse()
-                .getRegionList().get(i).getName());
-            formatButton(regionButton[i], 20, 20);
+            regionButton[i] = new JButton(" ");
+            formatButton(regionButton[i], 0, 0);
             regionButton[i].setLocation(regionButton[i].getX(),
                 regionButton[i].getY());
             gbc.gridx = game.getUniverse().getRegionList().get(i).getX() + 200;
@@ -424,8 +406,9 @@ public class SpaceTraderDriver extends JFrame {
             Region reg = game.getUniverse().getRegionList().get(i);
             regionButton[i].addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    mapScreen.setVisible(false);
-                    confirmTravelScreen(reg);
+                    changeTargetDisplay(reg, targetImage, targetName, targetLoc,
+                        targetTech, targetCost);
+                    targetedRegion = reg;
                 }
             });
             mapDisplay.add(regionButton[i], gbc);
@@ -433,137 +416,114 @@ public class SpaceTraderDriver extends JFrame {
 
         JTextField playerLocName = new JTextField("Current Location: " + game
             .getPlayer().getCurrReg().getName());
-        formatText(playerLocName, false, 300, 30);
+        formatText(playerLocName, false, 0, 0);
         JTextField playerLocCoord = new JTextField("Current Coordinates: "
             + game.getPlayer().getCurrReg().getCoord());
-        formatText(playerLocCoord, false, 300, 30);
+        formatText(playerLocCoord, false, 0, 0);
+        JTextField shipHP = new JTextField("Ship Condition: 12345/12345");
+        formatText(shipHP, false, 0, 0);
+        JTextField shipFuel = new JTextField("Ship Fuel: 12345/12345");
+        formatText(shipFuel, false, 0, 0);
         JPanel subInfoPanel = new JPanel();
-        subInfoPanel.setLayout(new GridLayout(2, 0));
+        subInfoPanel.setLayout(new GridLayout(2, 2));
+        subInfoPanel.add(shipHP);
+        subInfoPanel.add(shipFuel);
         subInfoPanel.add(playerLocName);
         subInfoPanel.add(playerLocCoord);
 
         JButton cancelTravel = new JButton("Back");
-        formatButton(cancelTravel, 300, 30);
+        formatButton(cancelTravel, 0, 0);
         cancelTravel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 mapScreen.setVisible(false);
                 setUpRegionScreen();
             }
         });
-
-        JPanel infoAndOption = new JPanel();
-        infoAndOption.setLayout(new GridLayout(1, 0));
-        infoAndOption.add(subInfoPanel);
-        infoAndOption.add(cancelTravel);
+        JButton confirmTravel = new JButton("Travel");
+        formatButton(confirmTravel, 0, 0);
+        confirmTravel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (targetedRegion != null) {
+                    mapScreen.setVisible(false);
+                    game.getPlayer().setCurrReg(targetedRegion);
+                    setUpRegionScreen();
+                }
+            }
+        });
 
         mapScreen = new JPanel();
         mapScreen.setLayout(new GridBagLayout());
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        mapScreen.add(mapDisplay, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.PAGE_END;
-        gbc.insets = new Insets(50, 0, 0, 0);
-        mapScreen.add(infoAndOption, gbc);
+        addWithGBC(mapScreen, mapDisplay, new int[] {0, 0, 1, 2, 0, 0},
+            new Insets(30, 22, 30, 22));
+        addWithGBC(mapScreen, subInfoPanel, new int[] {0, 2, 1, 1, 0, 0});
+        addWithGBC(mapScreen, targetImage, new int[] {1, 0, 2, 1, 0, 0});
+        addWithGBC(mapScreen, targetInfo, new int[] {1, 1, 2, 1, 0, 40});
+        addWithGBC(mapScreen, cancelTravel, new int[] {1, 2, 1, 1, 70, 0});
+        addWithGBC(mapScreen, confirmTravel, new int[] {2, 2, 1, 1, 70, 0});
 
         this.contentPane.add(mapScreen);
         mapScreen.setVisible(true);
     }
 
-    public void confirmTravelScreen(Region region) {
-        JTextField regionName = new JTextField(region.getName());
-        formatText(regionName, false, 300, 30);
-        JTextField techLevel = new JTextField("Tech Level: "
-            + region.getTechLevel());
-        formatText(techLevel, false, 300, 30);
-        JTextField coordinate = new JTextField("Coordinates: (" + region.getX()
-            + ", " + region.getY() + ")");
-        formatText(coordinate, false, 300, 30);
+    public void changeTargetDisplay(Region region, JLabel image,
+            JTextField name, JTextField loc, JTextField tech, JTextField cost) {
+        image.setIcon(new ImageIcon(region.getImage().getScaledInstance(300,
+            400, Image.SCALE_DEFAULT)));
+        name.setText("Name:\t" + region.getName());
+        loc.setText("Location:\t" + region.getCoord());
+        tech.setText("Tech Level:\t" + region.getTechLevel());
         int diffMult;
-        if (game.getDifficulty() == "Easy") {
+        if (game.getDifficulty().equals("Easy")) {
             diffMult = 1;
-        } else if (game.getDifficulty() == "Normal") {
+        } else if (game.getDifficulty().equals("Normal")) {
             diffMult = 2;
         } else {
             diffMult = 3;
         }
-        JTextField travelCost = new JTextField("Cost: "
-            + game.getDistance(region) * diffMult);
-        formatText(travelCost, false, 300, 30);
-        JTextField distance = new JTextField("Distance: "
-            + game.getDistance(region));
-        formatText(distance, false, 300, 30);
-
-        JButton backButton = new JButton("Back");
-        formatButton(backButton, 300, 30);
-        backButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                confirmTravelScreen.setVisible(false);
-                setUpMapScreen();
-            }
-        });
-        JButton travelButton = new JButton("Travel");
-        formatButton(travelButton, 300, 30);
-        travelButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                confirmTravelScreen.setVisible(false);
-                //=============================================================
-                // add code that subtracts fuel from the player's
-                // Ship and set the new screen to display the region
-                //=============================================================
-
-                game.getPlayer().setCurrReg(region);
-                setUpRegionScreen();
-            }
-        });
-
-        JPanel subRegionPanel = new JPanel();
-        subRegionPanel.setLayout(new GridLayout(0, 2));
-        subRegionPanel.add(backButton);
-        subRegionPanel.add(travelButton);
-
-        confirmTravelScreen = new JPanel();
-        confirmTravelScreen.setLayout(new GridLayout(0, 1));
-        confirmTravelScreen.add(regionName);
-        confirmTravelScreen.add(techLevel);
-        confirmTravelScreen.add(coordinate);
-        confirmTravelScreen.add(travelCost);
-        confirmTravelScreen.add(distance);
-        confirmTravelScreen.add(subRegionPanel);
-        confirmTravelScreen.setBackground(Color.BLACK);
-        this.contentPane.add(confirmTravelScreen);
-        confirmTravelScreen.setVisible(true);
+        cost.setText(String.format("Cost:\t%.2f",
+            game.getDistance(region) * diffMult));
     }
 
-    // public void createLabelTimer(JLabel text) {
-    //     Timer blinkingTimer = new Timer(500, new ActionListener() {
-    //         boolean on = false;
-    //         public void actionPerformed(ActionEvent e) {
-    //             if (on) {
-    //                 text.setForeground(Color.CYAN);
-    //             } else {
-    //                 text.setForeground(Color.WHITE);
+    public void createLabelTimer(JLabel text) {
+        Timer blinkingTimer = new Timer(500, new ActionListener() {
+            private boolean on = false;
+            public void actionPerformed(ActionEvent e) {
+                if (on) {
+                    text.setForeground(Color.CYAN);
+                } else {
+                    text.setForeground(Color.WHITE);
+                }
+                on = !on;
+            }
+        });
+        blinkingTimer.start();
+    }
+    public void createButtonTimer(JButton text) {
+        Timer blinkingTimer = new Timer(500, new ActionListener() {
+            private boolean on = false;
+            public void actionPerformed(ActionEvent e) {
+                if (on) {
+                    text.setForeground(Color.CYAN);
+                } else {
+                    text.setForeground(Color.WHITE);
+                }
+                on = !on;
+            }
+        });
+        blinkingTimer.start();
+    }
+
+    // public void setBackground(File background) {
+    //     try {
+    //         final Image backgroundImage = javax.imageio.ImageIO.read(background);
+    //         setContentPane(new JPanel(new BorderLayout()) {
+    //             @Override public void paintComponent(Graphics g) {
+    //                 g.drawImage(backgroundImage, 0, 0, null);
     //             }
-    //             on = !on;
-    //         }
-    //     });
-    //     blinkingTimer.start();
-    // }
-    // public void createButtonTimer(JButton text) {
-    //     Timer blinkingTimer = new Timer(500, new ActionListener() {
-    //         boolean on = false;
-    //         public void actionPerformed(ActionEvent e) {
-    //             if (on) {
-    //                 text.setForeground(Color.CYAN);
-    //             } else {
-    //                 text.setForeground(Color.WHITE);
-    //             }
-    //             on = !on;
-    //         }
-    //     });
-    //     blinkingTimer.start();
+    //         });
+    //     } catch (java.io.IOException e) {
+    //         e.printStackTrace();
+    //     }
     // }
 
     public void formatButton(JButton b, int x, int y, Color fore, Color back) {
@@ -585,6 +545,21 @@ public class SpaceTraderDriver extends JFrame {
     }
     public void formatText(JTextField t, boolean editable, int x, int y) {
         formatText(t, editable, x, y, Color.CYAN, Color.BLACK);
+    }
+    public void addWithGBC(JPanel jPan, JComponent jCom, int[] val, Insets in) {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = val[0];
+        gbc.gridy = val[1];
+        gbc.gridwidth = val[2];
+        gbc.gridheight = val[3];
+        gbc.ipadx = val[4];
+        gbc.ipady = val[5];
+        gbc.insets = in;
+        gbc.fill = GridBagConstraints.BOTH;
+        jPan.add(jCom, gbc);
+    }
+    public void addWithGBC(JPanel jPan, JComponent jCom, int[] vals) {
+        addWithGBC(jPan, jCom, vals, new Insets(0, 0, 0, 0));
     }
     public void storeName(String name) {
         this.name = name;

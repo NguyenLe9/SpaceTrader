@@ -7,13 +7,9 @@ public class Game {
         this.universe = Universe.getUniverse();
         this.player = new Player(skills[0], skills[1], skills[2], skills[3],
             credit, universe.pickRandomRegion());
+        // this.player = new Player(skills, credit, "", universe.pickRandomRegion());
         this.setDifficulty(difficulty);
     }
-    // public Region getRandomRegionName() {
-    //     Region name = Region.values()[(int)(Math.random()*
-    //         Region.values().length)];
-    //     return name;
-    // }
     public double getDistance(Region destination) {
         return java.lang.Math.sqrt(Math.pow(this.player.getCurrReg().getX()
             - destination.getX(), 2) + Math.pow(this.player.getCurrReg().getY()

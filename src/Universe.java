@@ -27,7 +27,7 @@ public class Universe {
         regions = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Region newRegion = new Region();
-            newRegion.setIndex(i);
+            // newRegion.setIndex(i);
             regions.add(newRegion);
         }
     }

@@ -1,4 +1,6 @@
 import java.util.Set;
+import java.awt.*;
+import java.io.*;
 
 public class Region {
     private enum TechLevel {
@@ -28,12 +30,22 @@ public class Region {
     private TechLevel techLevel;
     private String name;
     private int index;
+    private Image image;
+    private static int regNum = 0;
 
     public Region() {
-        this.x = generateCoords(Universe.getXCoord());
-        this.y = generateCoords(Universe.getYCoord());
-        this.techLevel = generateTechLevel();
-        this.name = generateName();
+        try {
+            this.x = generateCoords(Universe.getXCoord());
+            this.y = generateCoords(Universe.getYCoord());
+            this.techLevel = generateTechLevel();
+            this.name = generateName();
+            this.image = javax.imageio.ImageIO.read(
+                    new File("Graphics/reg" + regNum + ".jpg"));
+            this.index = regNum;
+            regNum++;
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private TechLevel generateTechLevel() {
@@ -94,6 +106,10 @@ public class Region {
 
     public int getIndex() {
         return this.index;
+    }
+
+    public Image getImage() {
+        return this.image;
     }
 
     public void setIndex(int index) {
