@@ -32,4 +32,14 @@ public class Game {
         return this.universe;
     }
 
+    public void calculateMarketPrice() {
+        Item[] itemList = this.player.getCurrReg().getMarket().getItem();
+        for (int i = 0; i < itemList.length; i++) {
+            itemList[i].setBuyPrice((int) (itemList[i].getPrice()
+                * java.lang.Math.pow(1.01, 16 - this.player.getmPoint())));
+            itemList[i].setSellPrice((int) (itemList[i].getPrice()
+                * java.lang.Math.pow(0.99, 16 - this.player.getmPoint())));
+        }
+    }
+
 }

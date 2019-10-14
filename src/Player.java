@@ -75,5 +75,7 @@ public class Player {
         return this.currentRegion;
     }
 
-
+    public void changeCredit(int credit) {
+        this.credit += credit;
+    }
 }

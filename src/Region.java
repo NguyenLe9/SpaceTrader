@@ -30,6 +30,7 @@ public class Region {
     private TechLevel techLevel;
     private String name;
     private int index;
+    private Market market;
     private Image image;
     private static int regNum = 0;
 
@@ -39,9 +40,10 @@ public class Region {
             this.y = generateCoords(Universe.getYCoord());
             this.techLevel = generateTechLevel();
             this.name = generateName();
+            this.index = regNum;
+            this.market = new Market(techToInt(this.techLevel));
             this.image = javax.imageio.ImageIO.read(
                     new File("Graphics/reg" + regNum + ".jpg"));
-            this.index = regNum;
             regNum++;
         } catch (java.io.IOException e) {
             e.printStackTrace();
@@ -100,6 +102,7 @@ public class Region {
     public String getName() {
         return this.name;
     }
+
     public String getCoord() {
         return "(" + this.x + ", " + this.y + ")";
     }
@@ -112,7 +115,29 @@ public class Region {
         return this.image;
     }
 
+    public Market getMarket() {
+        return this.market;
+    }
+
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public int techToInt(TechLevel tech) {
+        if (tech == TechLevel.PREAG) {
+            return 7;
+        } else if (tech == TechLevel.AGRICULTURE) {
+            return 6;
+        } else if (tech == TechLevel.MEDIEVAL) {
+            return 5;
+        } else if (tech == TechLevel.RENAISSANCE) {
+            return 4;
+        } else if (tech == TechLevel.INDUSTRIAL) {
+            return 3;
+        } else if (tech == TechLevel.MODERN) {
+            return 2;
+        } else {
+            return 1;
+        }
     }
 }
