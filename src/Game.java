@@ -1,3 +1,5 @@
+// import java.lang.Math;
+
 public class Game {
     private Universe universe;
     private Player player;
@@ -49,10 +51,12 @@ public class Game {
         Item[] itemList = this.player.getCurrReg().getMarket().getItem();
         Item[] inventory = this.player.getShip().getInventory();
         for (int i = 0; i < itemList.length; i++) {
-            itemList[i].setPrice((int) (itemList[i].getPrice()
-                * java.lang.Math.pow(1.01, 16 - this.player.getmPoint())));
-            inventory[i].setPrice((int) (itemList[i].getPrice()
-                * java.lang.Math.pow(0.99, 16 - this.player.getmPoint())));
+            itemList[i].setPrice((int) ((itemList[i].getPrice()
+                * Math.pow(1.01, 16 - this.player.getmPoint()))
+                / Math.log(itemList[i].getAmount() + 2)));
+            inventory[i].setPrice((int) ((itemList[i].getPrice()
+                * java.lang.Math.pow(0.99, 16 - this.player.getmPoint()))
+                / Math.log(itemList[i].getAmount() + 2)));
         }
     }
 
