@@ -331,9 +331,6 @@ public class SpaceTraderDriver extends JFrame {
                 setUpTradeScreen();
             }
         });
-        //=================================================================
-        // implement functionality for the trade button
-        //=================================================================
         JButton travelButton = new JButton("Travel");
         formatButton(travelButton, 300, 30);
         travelButton.addActionListener(new ActionListener() {
@@ -372,94 +369,110 @@ public class SpaceTraderDriver extends JFrame {
     }
 
     public void setUpTradeScreen() {
+        // calculate buy and sell prices depending on player merchant skill
         game.calculateMarketPrice();
 
-        Item[] itemList = game.getPlayer().getCurrReg().getMarket().getItem();
+        // aliasing so code doesn't get too cluttered
+        Item[] items = game.getPlayer().getCurrReg().getMarket().getItem();
+        Ship ship = game.getPlayer().getShip();
+        Item[] inventory = game.getPlayer().getShip().getInventory();
 
-        JTextField shipCapacity = new JTextField("Ship capcity: 12345/67890");
+        JTextField shipCapacity = new JTextField("Ship capcity: "
+            + ship.getCargo() + "/" + ship.getMaxCargo());
         formatText(shipCapacity, false, 300, 30);
         JTextField playerCredit = new JTextField("Credits: "
             + game.getPlayer().getCredit());
         formatText(playerCredit, false, 300, 30);
 
-        JPanel market = new JPanel();
-        market.setLayout(new GridBagLayout());
+        JPanel buyMarket = new JPanel();
+        buyMarket.setLayout(new GridBagLayout());
 
-        JTextField marketName = new JTextField("Item");
-        formatText(marketName, false, 300, 30);
-        addWithGBC(market, marketName, new int[] {0, 0, 1, 1, 120, 0});
-        JTextField marketPrice = new JTextField("Price");
-        formatText(marketPrice, false, 300, 30);
-        addWithGBC(market, marketPrice, new int[] {1, 0, 1, 1, 60, 0});
-        JTextField marketAmount = new JTextField("Available");
-        formatText(marketAmount, false, 300, 30);
-        addWithGBC(market, marketAmount, new int[] {2, 0, 1, 1, 2, 0});
+        JTextField buyName = new JTextField("Item");
+        formatText(buyName, false, 300, 30);
+        addWithGBC(buyMarket, buyName, new int[] {0, 0, 1, 1, 120, 0});
+        JTextField buyPrice = new JTextField("Price");
+        formatText(buyPrice, false, 300, 30);
+        addWithGBC(buyMarket, buyPrice, new int[] {1, 0, 1, 1, 60, 0});
+        JTextField buyAmount = new JTextField("Available");
+        formatText(buyAmount, false, 300, 30);
+        addWithGBC(buyMarket, buyAmount, new int[] {2, 0, 1, 1, 2, 0});
 
-        for (int i = 0; i < itemList.length; i++) {
-            JTextField itemName = new JTextField(itemList[i].getName());
-            formatText(itemName, false, 300, 30);
-            addWithGBC(market, itemName, new int[] {0, i + 1, 1, 1, 0, 0});
-            JTextField itemPrice = new JTextField("" + itemList[i].getBuyPrice());
-            formatText(itemPrice, false, 300, 30);
-            addWithGBC(market, itemPrice, new int[] {1, i + 1, 1, 1, 0, 0});
-            JTextField itemAmount = new JTextField("" + itemList[i].getAmount());
-            formatText(itemAmount, false, 300, 30);
-            addWithGBC(market, itemAmount, new int[] {2, i + 1, 1, 1, 0, 0});
+        JPanel sellMarket = new JPanel();
+        sellMarket.setLayout(new GridBagLayout());
+
+        JTextField sellName = new JTextField("Item");
+        formatText(sellName, false, 300, 30);
+        addWithGBC(sellMarket, sellName, new int[] {0, 0, 1, 1, 120, 0});
+        JTextField sellPrice = new JTextField("Price");
+        formatText(sellPrice, false, 300, 30);
+        addWithGBC(sellMarket, sellPrice, new int[] {1, 0, 1, 1, 60, 0});
+        JTextField sellAmount = new JTextField("Available");
+        formatText(sellAmount, false, 300, 30);
+        addWithGBC(sellMarket, sellAmount, new int[] {2, 0, 1, 1, 2, 0});
+
+        for (int i = 0; i < items.length; i++) {
+            JTextField itemBuyName = new JTextField(items[i].getName());
+            formatText(itemBuyName, false, 300, 30);
+            JTextField itemBuyPrice = new JTextField("" + items[i].getPrice());
+            formatText(itemBuyPrice, false, 300, 30);
+            JTextField itemBuyAmount = new JTextField("" + items[i].getAmount());
+            formatText(itemBuyAmount, false, 300, 30);
+            JTextField itemSellName = new JTextField(inventory[i].getName());
+            formatText(itemSellName, false, 300, 30);
+            JTextField itemSellPrice = new JTextField("" + inventory[i].getPrice());
+            formatText(itemSellPrice, false, 300, 30);
+            JTextField itemSellAmount = new JTextField("" + inventory[i].getAmount());
+            formatText(itemSellAmount, false, 300, 30);
+
+            addWithGBC(buyMarket, itemBuyName, new int[] {0, i + 1, 1, 1, 0, 0});
+            addWithGBC(buyMarket, itemBuyPrice, new int[] {1, i + 1, 1, 1, 0, 0});
+            addWithGBC(buyMarket, itemBuyAmount, new int[] {2, i + 1, 1, 1, 0, 0});
+            addWithGBC(sellMarket, itemSellName, new int[] {0, i + 1, 1, 1, 0, 0});
+            addWithGBC(sellMarket, itemSellPrice, new int[] {1, i + 1, 1, 1, 0, 0});
+            addWithGBC(sellMarket, itemSellAmount, new int[] {2, i + 1, 1, 1, 0, 0});
+
+            int index = i;
+
             JButton buttonBuy = new JButton("Buy");
             formatButton(buttonBuy, 300, 30);
-            int index = i;
             buttonBuy.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    // include sanity check to make sure ship has the capacity to carry the item
-                    if (itemList[index].getAmount() > 0 && itemList[index]
-                            .getBuyPrice() <= game.getPlayer().getCredit()) {
-                        itemList[index].changeAmount(-1);
-                        game.getPlayer().changeCredit(-itemList[index].getBuyPrice());
-                        // increase item count in player's inventory
-                        itemAmount.setText("" + itemList[index].getAmount());
+                    if (items[index].getPrice() <= game.getPlayer().getCredit()
+                            && items[index].getAmount() > 0
+                            && ship.getCargo() <= ship.getMaxCargo()) {
+                        items[index].changeAmount(-1);
+                        itemBuyAmount.setText("" + items[index].getAmount());
+                        inventory[index].changeAmount(1);
+                        itemSellAmount.setText("" + inventory[index].getAmount());
+                        ship.changeCargo(1);
+                        shipCapacity.setText("Ship capcity: " + ship.getCargo()
+                            + "/" + ship.getMaxCargo());
+                        game.getPlayer().changeCredit(-items[index].getPrice());
                         playerCredit.setText("Credits: " + game.getPlayer()
                             .getCredit());
                     }
                 }
             });
-            addWithGBC(market, buttonBuy, new int[] {3, i + 1, 1, 1, 0, 0});
-        }
-
-        JPanel inventory = new JPanel();
-        inventory.setLayout(new GridBagLayout());
-
-        JTextField inventoryName = new JTextField("Item");
-        formatText(inventoryName, false, 300, 30);
-        addWithGBC(inventory, inventoryName, new int[] {0, 0, 1, 1, 120, 0});
-        JTextField inventoryPrice = new JTextField("Price");
-        formatText(inventoryPrice, false, 300, 30);
-        addWithGBC(inventory, inventoryPrice, new int[] {1, 0, 1, 1, 60, 0});
-        JTextField inventoryAmount = new JTextField("Available");
-        formatText(inventoryAmount, false, 300, 30);
-        addWithGBC(inventory, inventoryAmount, new int[] {2, 0, 1, 1, 2, 0});
-
-        for (int i = 0; i < itemList.length; i++) {
-            JTextField itemName = new JTextField(itemList[i].getName());
-            formatText(itemName, false, 300, 30);
-            addWithGBC(inventory, itemName, new int[] {0, i + 1, 1, 1, 0, 0});
-            JTextField itemPrice = new JTextField("" + itemList[i].getSellPrice());
-            formatText(itemPrice, false, 300, 30);
-            addWithGBC(inventory, itemPrice, new int[] {1, i + 1, 1, 1, 0, 0});
-            JTextField itemAmount = new JTextField("" + itemList[i].getAmount());
-            formatText(itemAmount, false, 300, 30);
-            addWithGBC(inventory, itemAmount, new int[] {2, i + 1, 1, 1, 0, 0});
             JButton buttonSell = new JButton("Sell");
             formatButton(buttonSell, 300, 30);
-            int index = i;
-            // buttonSell.addActionListener(new ActionListener() {
-            //     public void actionPerformed(ActionEvent e) {
-            //         // sanity check, make sure ship has the inventory to sell
-            //         // if (game.getPlayer().getShip().getInventory())
-            //         itemList[index].increaseAmount(1);
-            //         itemAmount.setText("" + itemList[index].getAmount());
-            //     }
-            // });
-            addWithGBC(inventory, buttonSell, new int[] {3, i + 1, 1, 1, 0, 0});
+            buttonSell.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if (inventory[index].getAmount() > 0) {
+                        items[index].changeAmount(1);
+                        itemBuyAmount.setText("" + items[index].getAmount());
+                        inventory[index].changeAmount(-1);
+                        itemSellAmount.setText("" + inventory[index].getAmount());
+                        ship.changeCargo(-1);
+                        shipCapacity.setText("Ship capcity: " + ship.getCargo()
+                            + "/" + ship.getMaxCargo());
+                        game.getPlayer().changeCredit(inventory[index].getPrice());
+                        playerCredit.setText("Credits: " + game.getPlayer()
+                            .getCredit());
+                    }
+                }
+            });
+            addWithGBC(buyMarket, buttonBuy, new int[] {3, i + 1, 1, 1, 0, 0});
+            addWithGBC(sellMarket, buttonSell, new int[] {3, i + 1, 1, 1, 0, 0});
         }
 
         JButton buttonBack = new JButton("Back");
@@ -483,8 +496,8 @@ public class SpaceTraderDriver extends JFrame {
             new Insets(0, 0, 14, 0));
         addWithGBC(tradeScreen, sellBanner, new int[] {1, 0, 1, 1, 0, 0},
             new Insets(0, 0, 14, 0));
-        addWithGBC(tradeScreen, market, new int[] {0, 1, 1, 1, 0, 0});
-        addWithGBC(tradeScreen, inventory, new int[] {1, 1, 1, 1, 0, 0});
+        addWithGBC(tradeScreen, buyMarket, new int[] {0, 1, 1, 1, 0, 0});
+        addWithGBC(tradeScreen, sellMarket, new int[] {1, 1, 1, 1, 0, 0});
         addWithGBC(tradeScreen, shipCapacity, new int[] {0, 2, 1, 1, 0, 0},
             new Insets(14, 0, 0, 0));
         addWithGBC(tradeScreen, playerCredit, new int[] {1, 2, 1, 1, 0, 0},
@@ -550,9 +563,11 @@ public class SpaceTraderDriver extends JFrame {
         JTextField playerLocCoord = new JTextField("Current Location: "
             + game.getPlayer().getCurrReg().getCoord());
         formatText(playerLocCoord, false, 0, 0);
-        JTextField shipHP = new JTextField("Ship HP: 12345/12345");
+        JTextField shipHP = new JTextField("Ship HP: " + game.getPlayer()
+            .getShip().getHealth() + "/" + game.getPlayer().getShip().getMaxHealth());
         formatText(shipHP, false, 0, 0);
-        JTextField shipFuel = new JTextField("Ship Fuel: 12345/12345");
+        JTextField shipFuel = new JTextField("Ship Fuel: " + game.getPlayer()
+            .getShip().getFuel() + "/" + game.getPlayer().getShip().getMaxFuel());
         formatText(shipFuel, false, 0, 0);
         JPanel subInfoPanel = new JPanel();
         subInfoPanel.setLayout(new GridLayout(2, 2));
@@ -602,16 +617,7 @@ public class SpaceTraderDriver extends JFrame {
         name.setText("Name:\t" + region.getName());
         loc.setText("Location:\t" + region.getCoord());
         tech.setText("Tech Level:\t" + region.getTechLevel());
-        int diffMult;
-        if (game.getDifficulty().equals("Easy")) {
-            diffMult = 1;
-        } else if (game.getDifficulty().equals("Normal")) {
-            diffMult = 2;
-        } else {
-            diffMult = 3;
-        }
-        cost.setText(String.format("Cost:\t%.2f",
-            game.getDistance(region) * diffMult));
+        cost.setText(String.format("Cost:\t%.2f", game.getCost(region)));
     }
 
     public void createLabelTimer(JLabel text) {

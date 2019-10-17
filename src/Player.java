@@ -4,6 +4,7 @@ public class Player {
     private int mPoint;
     private int ePoint;
     // private int[] skills;
+    private Ship ship;
     private int credit;
     private String name;
     private Region currentRegion;
@@ -15,6 +16,7 @@ public class Player {
         this.mPoint = mPoint;
         this.ePoint = ePoint;
         this.credit = credit;
+        this.ship = new Ship("Starship");
         this.currentRegion = currentRegion;
     }
     // public Player(int[] skills, int credit, String name, Region currentRegion) {
@@ -73,6 +75,9 @@ public class Player {
     }
     public Region getCurrReg() {
         return this.currentRegion;
+    }
+    public Ship getShip() {
+        return this.ship;
     }
 
     public void changeCredit(int credit) {

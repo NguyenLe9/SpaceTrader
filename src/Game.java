@@ -16,6 +16,19 @@ public class Game {
             - destination.getY(), 2));
     }
 
+    public double getCost(Region destination) {
+        // implement a modifier to change cost depending on player's pilot skill
+        int diffMult;
+        if (getDifficulty().equals("Easy")) {
+            diffMult = 1;
+        } else if (getDifficulty().equals("Normal")) {
+            diffMult = 2;
+        } else {
+            diffMult = 3;
+        }
+        return getDistance(destination) * diffMult / 10;
+    }
+
     public void setPlayer(Player player) {
         this.player = player;
     }
@@ -34,10 +47,11 @@ public class Game {
 
     public void calculateMarketPrice() {
         Item[] itemList = this.player.getCurrReg().getMarket().getItem();
+        Item[] inventory = this.player.getShip().getInventory();
         for (int i = 0; i < itemList.length; i++) {
-            itemList[i].setBuyPrice((int) (itemList[i].getPrice()
+            itemList[i].setPrice((int) (itemList[i].getPrice()
                 * java.lang.Math.pow(1.01, 16 - this.player.getmPoint())));
-            itemList[i].setSellPrice((int) (itemList[i].getPrice()
+            inventory[i].setPrice((int) (itemList[i].getPrice()
                 * java.lang.Math.pow(0.99, 16 - this.player.getmPoint())));
         }
     }

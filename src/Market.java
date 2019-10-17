@@ -2,6 +2,7 @@
 public class Market {
 
     private Item[] item;
+    // array for base values of amounts available for each item in each tech level
     private int[][] avail = new int[][] {{60, 40, 80, 30, 50, 20, 30, 100, 100, 20, 5, 10, 1},
                                          {90, 60, 100, 60, 1000, 30, 30, 30, 20, 3, 0, 1, 0},
                                          {80, 60, 150, 100, 3, 10, 20, 20, 1, 0, 0, 0, 0},
