@@ -51,12 +51,12 @@ public class Game {
         Item[] itemList = this.player.getCurrReg().getMarket().getItem();
         Item[] inventory = this.player.getShip().getInventory();
         for (int i = 0; i < itemList.length; i++) {
-            itemList[i].setPrice((int) ((itemList[i].getPrice()
+            itemList[i].setPrice((int) ((itemList[i].getPriceForCalc()
                 * Math.pow(1.01, 16 - this.player.getmPoint()))
-                / Math.log(itemList[i].getAmount() + 2)));
-            inventory[i].setPrice((int) ((itemList[i].getPrice()
+                / Math.log(1.1 + itemList[i].getAmount() * 0.03)));
+            inventory[i].setPrice((int) ((itemList[i].getPriceForCalc()
                 * java.lang.Math.pow(0.99, 16 - this.player.getmPoint()))
-                / Math.log(itemList[i].getAmount() + 2)));
+                / Math.log(1.1 + itemList[i].getAmount() * 0.03)));
         }
     }
 

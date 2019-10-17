@@ -3,12 +3,14 @@ import java.util.Random;
 public class Item {
     private String name;
     private int price;
+    private int priceForCalc;
     private int amount;
     private Random random = new Random();
 
     public Item(String name, int price, int amount) {
         this.name = name;
         this.price = generatePrice(price);
+        this.priceForCalc = price;
         this.amount = generateAmount(amount);
     }
 
@@ -20,6 +22,9 @@ public class Item {
     }
     public int getAmount() {
         return this.amount;
+    }
+    public int getPriceForCalc() {
+        return this.priceForCalc;
     }
 
     public void setPrice(int price) {

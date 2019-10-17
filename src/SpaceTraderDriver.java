@@ -271,6 +271,8 @@ public class SpaceTraderDriver extends JFrame {
                     confirmScreen.setVisible(false);
                     game = new Game(skillDis, credit, difficulty);
                     setUpRegionScreen();
+                    // calculate buy and sell prices depending on player merchant skill
+                    game.calculateMarketPrice();
                 }
             });
 
@@ -369,8 +371,6 @@ public class SpaceTraderDriver extends JFrame {
     }
 
     public void setUpTradeScreen() {
-        // calculate buy and sell prices depending on player merchant skill
-        game.calculateMarketPrice();
 
         // aliasing so code doesn't get too cluttered
         Item[] items = game.getPlayer().getCurrReg().getMarket().getItem();
@@ -592,6 +592,8 @@ public class SpaceTraderDriver extends JFrame {
                     mapScreen.setVisible(false);
                     game.getPlayer().setCurrReg(targetedRegion);
                     setUpRegionScreen();
+                    // calculate buy and sell prices depending on player merchant skill
+                    game.calculateMarketPrice();
                 }
             }
         });
