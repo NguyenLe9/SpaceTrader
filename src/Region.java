@@ -51,7 +51,7 @@ public class Region {
     }
 
     private TechLevel generateTechLevel() {
-        int ordinal = (int) (Math.random() * 6);
+        int ordinal = (int) (Math.random() * 7);
         return TechLevel.values()[ordinal];
     }
 

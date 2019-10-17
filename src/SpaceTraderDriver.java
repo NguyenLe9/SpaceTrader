@@ -525,6 +525,7 @@ public class SpaceTraderDriver extends JFrame {
         formatText(targetTech, false, 0, 0);
         JTextField targetCost = new JTextField("Cost:\t0.00");
         formatText(targetCost, false, 0, 0);
+        targetedRegion = game.getPlayer().getCurrReg();
 
         JPanel targetInfo = new JPanel();
         targetInfo.setLayout(new GridLayout(0, 1));
