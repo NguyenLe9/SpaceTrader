@@ -4,7 +4,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import java.net.URL;
 import java.io.*;
-
+import javax.swing.JOptionPane;
 public class SpaceTraderDriver extends JFrame {
 
     private final JPanel contentPane;
@@ -589,13 +589,25 @@ public class SpaceTraderDriver extends JFrame {
         formatButton(confirmTravel, 0, 0);
         confirmTravel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (targetedRegion != null) {
+                /*if (targetedRegion != null) {
                     mapScreen.setVisible(false);
                     game.getPlayer().setCurrReg(targetedRegion);
                     setUpRegionScreen();
                     // calculate buy and sell prices depending on player merchant skill
                     game.calculateMarketPrice();
-                }
+		    }*/
+		if (targetedRegion != null) {
+                    mapScreen.setVisible(false);
+                    if (!game.getPlayer().checkTravel(targetedRegion)) {
+                        JOptionPane.showMessageDialog(
+						      null, "CANNOT TRAVEL DUE TO INSUFFICIENT FUEL",
+						      "ERROR", JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        game.getPlayer().setCurrReg(targetedRegion);
+                        setUpRegionScreen();
+                        // calculate buy and sell prices depending on player merchant skill
+                        game.calculateMarketPrice();
+                    }
             }
         });
 
