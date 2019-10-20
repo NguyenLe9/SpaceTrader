@@ -140,4 +140,15 @@ public class Region {
             return 1;
         }
     }
+    public int calculateFuelCost
+	(Region targetedReg, int pPoint) {
+        int x1 = targetedReg.getX();
+        int x2 = this.getX();
+        int y1 = targetedReg.getY();
+        int y2 = this.getY();
+        int initialCost =
+	    (int)(Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
+        int finalCost = Math.abs(initialCost - pPoint*2);
+        return finalCost;
+    }
 }
