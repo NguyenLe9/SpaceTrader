@@ -83,4 +83,14 @@ public class Player {
     public void changeCredit(int credit) {
         this.credit += credit;
     }
+    public boolean checkTravel(Region targetedRegion) {
+        boolean isSufficient = true;
+        int targetedFuel =
+	    this.currentRegion.calculateFuelCost(targetedRegion, pPoint);
+        int currentFuel = this.ship.getFuel();
+        if (targetedFuel > currentFuel) {
+            isSufficient = false;
+        }
+        return isSufficient;
+    }
 }
