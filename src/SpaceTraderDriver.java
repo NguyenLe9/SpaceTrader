@@ -589,25 +589,25 @@ public class SpaceTraderDriver extends JFrame {
         formatButton(confirmTravel, 0, 0);
         confirmTravel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                /*if (targetedRegion != null) {
+                if (targetedRegion != null) {
                     mapScreen.setVisible(false);
-                    game.getPlayer().setCurrReg(targetedRegion);
-                    setUpRegionScreen();
-                    // calculate buy and sell prices depending on player merchant skill
-                    game.calculateMarketPrice();
-		    }*/
-		if (targetedRegion != null) {
-                    mapScreen.setVisible(false);
-                    if (!game.getPlayer().checkTravel(targetedRegion)) {
+                    if (!game.checkTravel(targetedRegion)) {
                         JOptionPane.showMessageDialog(
-						      null, "CANNOT TRAVEL DUE TO INSUFFICIENT FUEL",
-						      "ERROR", JOptionPane.WARNING_MESSAGE);
+                            null, "CANNOT TRAVEL DUE TO INSUFFICIENT FUEL",
+                            "ERROR", JOptionPane.WARNING_MESSAGE);
+                        mapScreen.setVisible(true);
                     } else {
+                        // aliasing for easier to read code
+                        Ship ship = game.getPlayer().getShip();
+                        ship.changeFuel(-game.getCost(targetedRegion));
+                        shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/"
+                            + ship.getMaxFuel());
                         game.getPlayer().setCurrReg(targetedRegion);
                         setUpRegionScreen();
                         // calculate buy and sell prices depending on player merchant skill
                         game.calculateMarketPrice();
                     }
+                }
             }
         });
 
@@ -632,7 +632,7 @@ public class SpaceTraderDriver extends JFrame {
         name.setText("Name:\t" + region.getName());
         loc.setText("Location:\t" + region.getCoord());
         tech.setText("Tech Level:\t" + region.getTechLevel());
-        cost.setText(String.format("Cost:\t%.2f", game.getCost(region)));
+        cost.setText(("Cost:\t" + game.getCost(region)));
     }
 
     public void createLabelTimer(JLabel text) {

@@ -18,7 +18,7 @@ public class Game {
             - destination.getY(), 2));
     }
 
-    public double getCost(Region destination) {
+    public int getCost(Region destination) {
         // implement a modifier to change cost depending on player's pilot skill
         int diffMult;
         if (getDifficulty().equals("Easy")) {
@@ -28,7 +28,14 @@ public class Game {
         } else {
             diffMult = 3;
         }
-        return getDistance(destination) * diffMult / 10;
+        return (int) ((getDistance(destination) * diffMult / 5)
+            / Math.sqrt(1 + this.getPlayer().getpPoint()));
+    }
+
+    public boolean checkTravel(Region targetedRegion) {
+        int targetedFuel = getCost(targetedRegion);
+        int currentFuel = this.getPlayer().getShip().getFuel();
+        return targetedFuel < currentFuel;
     }
 
     public void setPlayer(Player player) {
