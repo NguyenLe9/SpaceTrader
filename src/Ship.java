@@ -69,6 +69,10 @@ public class Ship {
         this.cargo += i;
     }
 
+    public void changeFuel(int i) {
+        this.fuel += i;
+    }
+
     public void setCargo(int cargo) {
         this.cargo = cargo;
     }

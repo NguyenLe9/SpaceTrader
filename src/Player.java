@@ -9,12 +9,13 @@ public class Player {
     private String name;
     private Region currentRegion;
 
-    public Player(int pPoint, int fPoint, int mPoint, int ePoint, int credit,
+    public Player(int[] skillPoint, int credit, String name,
             Region currentRegion) {
-        this.pPoint = pPoint;
-        this.fPoint = fPoint;
-        this.mPoint = mPoint;
-        this.ePoint = ePoint;
+        this.pPoint = skillPoint[0];
+        this.fPoint = skillPoint[1];
+        this.mPoint = skillPoint[2];
+        this.ePoint = skillPoint[3];
+        this.name = name;
         this.credit = credit;
         this.ship = new Ship("Starship");
         this.currentRegion = currentRegion;

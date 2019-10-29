@@ -15,6 +15,9 @@ public class SpaceTraderDriver extends JFrame {
     private JPanel mapScreen;
     private JPanel regionScreen;
     private JPanel confirmTravelScreen;
+    // private Game game = new Game()
+    // private Stirng name = game.getPlayer().getName()
+    // private int credit;
     private Game game;
     // these variables will be kept for use in initializing the game
     private String name;
@@ -28,7 +31,7 @@ public class SpaceTraderDriver extends JFrame {
     // Launch the application.
     public static void main(final String[] args) {
         EventQueue.invokeLater(new Runnable() {
-            public void run() {
+                    public void run() {
                 try {
                     SpaceTraderDriver spacetrade = new SpaceTraderDriver();
                     spacetrade.setVisible(true);
@@ -589,9 +592,38 @@ public class SpaceTraderDriver extends JFrame {
         confirmTravel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (targetedRegion != null) {
-                    mapScreen.setVisible(false);
-                    game.getPlayer().setCurrReg(targetedRegion);
-                    setUpRegionScreen();
+                    if (!game.checkTravel(targetedRegion)) {
+                        JOptionPane.showMessageDialog(
+                            null, "CANNOT TRAVEL DUE TO INSUFFICIENT FUEL",
+                            "ERROR", JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        mapScreen.setVisible(false);
+                        Ship ship = game.getPlayer().getShip();
+                        NonPlayable encounter = game.randomEncounter();
+                        if (encounter == null) {
+                            ship.changeFuel(-game.getCost(targetedRegion));
+                            shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/"
+                                + ship.getMaxFuel());
+                            game.getPlayer().setCurrReg(targetedRegion);
+                            setUpRegionScreen();
+                            // calculate buy and sell prices depending on player merchant skill
+                            game.calculateMarketPrice();
+                        } else if (encounter.getType().equals("Trader")) {
+                            encounter = (Trader) encounter;
+                            //do trader things
+                        } else if (encounter.getType().equals("Bandit")) {
+                            encounter = (Bandit) encounter;
+                            //do bandit things
+                        } else if (encounter.getType().equals("Police")) {
+                            encounter = (Police) encounter;
+                            //do police things
+                        } else {
+                            // Sanity check, this statement should never be reached
+                            JOptionPane.showMessageDialog(
+                                null, "Invalid Encounter Type",
+                                "ERROR", JOptionPane.WARNING_MESSAGE);
+                        }
+                    }
                 }
             }
         });
@@ -730,8 +762,4 @@ public class SpaceTraderDriver extends JFrame {
         prompt.setText("Skill Points: " + (skillPoints - skillDis[0]
             - skillDis[1] - skillDis[2] - skillDis[3]));
     }
-    // public Game startGame(int pPoint, int mPoint, int ePoint,
-    //           int fPoint, int credit, String difficulty) {
-    //     return new Game(pPoint, mPoint, ePoint, fPoint, credit, difficulty);
-    // }
 }
