@@ -15,6 +15,7 @@ public class SpaceTraderDriver extends JFrame {
     private JPanel mapScreen;
     private JPanel regionScreen;
     private JPanel confirmTravelScreen;
+    private JPanel encounterScreen;
     // private Game game = new Game()
     // private Stirng name = game.getPlayer().getName()
     // private int credit;
@@ -602,26 +603,14 @@ public class SpaceTraderDriver extends JFrame {
                         NonPlayable encounter = game.randomEncounter();
                         if (encounter == null) {
                             ship.changeFuel(-game.getCost(targetedRegion));
-                            shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/"
-                                + ship.getMaxFuel());
+                            // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/"
+                            //     + ship.getMaxFuel());
                             game.getPlayer().setCurrReg(targetedRegion);
                             setUpRegionScreen();
                             // calculate buy and sell prices depending on player merchant skill
                             game.calculateMarketPrice();
-                        } else if (encounter.getType().equals("Trader")) {
-                            encounter = (Trader) encounter;
-                            //do trader things
-                        } else if (encounter.getType().equals("Bandit")) {
-                            encounter = (Bandit) encounter;
-                            //do bandit things
-                        } else if (encounter.getType().equals("Police")) {
-                            encounter = (Police) encounter;
-                            //do police things
                         } else {
-                            // Sanity check, this statement should never be reached
-                            JOptionPane.showMessageDialog(
-                                null, "Invalid Encounter Type",
-                                "ERROR", JOptionPane.WARNING_MESSAGE);
+                            setUpEncounterScreen(encounter, game.getPlayer().getCurrReg(), targetedRegion);
                         }
                     }
                 }
@@ -640,6 +629,177 @@ public class SpaceTraderDriver extends JFrame {
 
         this.contentPane.add(mapScreen);
         mapScreen.setVisible(true);
+    }
+
+    public void setUpEncounterScreen(NonPlayable encounter, Region from, Region to) {
+        try {
+            // TODO: once code is functional, test to see how big image should be and scale accordinly
+            Image img = new ImageIcon(encounter.getImage()).getImage()
+                    .getScaledInstance(850, 535, Image.SCALE_DEFAULT);
+            JLabel portrait = new JLabel(new ImageIcon(img));
+            JTextField dialogue = new JTextField(encounter.getSpeak());
+            formatText(dialogue, false, 0, 0);
+
+            encounterScreen = new JPanel();
+            encounterScreen.setLayout(new GridBagLayout());
+            addWithGBC(encounterScreen, portrait, new int[] {0, 0, 1, 1, 0, 0});
+            addWithGBC(encounterScreen, dialogue, new int[] {0, 1, 1, 1, 0, 0});
+
+            if (encounter.getType().equals("Trader")) {
+                // encounter = (Trader) encounter;
+                encounterScreen = setUpTraderEcounter((Trader) encounter, encounterScreen, to);
+                //do trader things
+            } else if (encounter.getType().equals("Bandit")) {
+                // encounter = (Bandit) encounter;
+                encounterScreen = setUpBanditEncounter((Bandit) encounter, encounterScreen, from, to);
+                //do bandit things
+            } else if (encounter.getType().equals("Police")) {
+                // encounter = (Police) encounter;
+                encounterScreen = setUpPoliceEncounter((Police) encounter, encounterScreen, from, to);
+                //do police things
+            } else {
+                // Sanity check, this statement should never be reached
+                JOptionPane.showMessageDialog(
+                    null, "Invalid Encounter Type",
+                    "ERROR", JOptionPane.WARNING_MESSAGE);
+            }
+            encounterScreen.setVisible(true);
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public JPanel setUpTraderEcounter(Trader encounter, JPanel encounterScreen, Region to) {
+        Ship ship = game.getPlayer().getShip();
+        JButton buyItems = new JButton("Buy");
+        formatButton(buyItems, 0, 0);
+
+        // TODO: need trader implementation first, then decide how to implement buying
+
+        // buyItems.addActionListener(new ActionListener() {
+        //     public void actionPerformed(ActionEvent e)) {
+        //          System.out.println("Did a thing");
+        //     }
+        // });
+        JButton ignoreTrader = new JButton("Ignore");
+        formatButton(ignoreTrader, 0, 0);
+        ignoreTrader.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                encounterScreen.setVisible(false);
+                ship.changeFuel(-game.getCost(to));
+                // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/" + ship.getMaxFuel());
+                game.getPlayer().setCurrReg(to);
+                setUpRegionScreen();
+            }
+        });
+        JButton robTrader = new JButton("Rob");
+        formatButton(robTrader, 0, 0);
+        robTrader.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                game.robTrader();
+                encounterScreen.setVisible(false);
+                ship.changeFuel(-game.getCost(to));
+                // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/" + ship.getMaxFuel());
+                game.getPlayer().setCurrReg(to);
+                setUpRegionScreen();
+            }
+        });
+        final JButton negotiateTrader = new JButton("Negotiate");
+        formatButton(negotiateTrader, 0, 0);
+        negotiateTrader.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                game.negotiateTrader();
+                negotiateTrader.setEnabled(false);
+            }
+        });
+        addWithGBC(encounterScreen, buyItems, new int[] {0, 2, 1, 1, 0, 0});
+        addWithGBC(encounterScreen, ignoreTrader, new int[] {0, 2, 1, 1, 0, 0});
+        addWithGBC(encounterScreen, robTrader, new int[] {0, 3, 1, 1, 0, 0});
+        return encounterScreen;
+    }
+    public JPanel setUpPoliceEncounter(Police encounter, JPanel encounterScreen, Region from, Region to) {
+        Ship ship = game.getPlayer().getShip();
+        JButton forfeitItems = new JButton("Forfeit Items");
+        formatButton(forfeitItems, 0, 0);
+        forfeitItems.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                game.forfeitItemsPolice(encounter.getForfeitList());
+                encounterScreen.setVisible(false);
+                ship.changeFuel(-game.getCost(to));
+                // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/" + ship.getMaxFuel());
+                game.getPlayer().setCurrReg(to);
+                setUpRegionScreen();
+            }
+        });
+        JButton fleePolice = new JButton("Flee");
+        formatButton(fleePolice, 0, 0);
+        fleePolice.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                game.fleePolice(encounter.getForfeitList(), from, to);
+                encounterScreen.setVisible(false);
+                ship.changeFuel(-game.getCost(to));
+                // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/" + ship.getMaxFuel());
+                setUpRegionScreen();
+            }
+        });
+        JButton fightPolice = new JButton("Fight");
+        formatButton(fightPolice, 0, 0);
+        fightPolice.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                game.fightPolice(encounter.getForfeitList());
+                encounterScreen.setVisible(false);
+                ship.changeFuel(-game.getCost(to));
+                // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/" + ship.getMaxFuel());
+                game.getPlayer().setCurrReg(to);
+                setUpRegionScreen();
+            }
+        });
+        addWithGBC(encounterScreen, forfeitItems, new int[] {0, 2, 1, 1, 0, 0});
+        addWithGBC(encounterScreen, fleePolice, new int[] {0, 3, 1, 1, 0, 0});
+        addWithGBC(encounterScreen, fightPolice, new int[] {0, 4, 1, 1, 0, 0});
+        return encounterScreen;
+    }
+    public JPanel setUpBanditEncounter(Bandit encounter, JPanel encounterScreen, Region from, Region to) {
+        Ship ship = game.getPlayer().getShip();
+        JButton demandBandit = new JButton("Pay Demand");
+        formatButton(demandBandit, 0, 0);
+        demandBandit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                game.payBandit(encounter.getDemand());
+                encounterScreen.setVisible(false);
+                ship.changeFuel(-game.getCost(to));
+                // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/" + ship.getMaxFuel());
+                game.getPlayer().setCurrReg(to);
+                setUpRegionScreen();
+            }
+        });
+        JButton fleeBandit = new JButton("Flee");
+        formatButton(fleeBandit, 0, 0);
+        fleeBandit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                game.fleeBandit(encounter.getDemand());
+                encounterScreen.setVisible(false);
+                ship.changeFuel(-game.getCost(to));
+                // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/" + ship.getMaxFuel());
+                setUpRegionScreen();
+            }
+        });
+        JButton fightBandit = new JButton("Fight");
+        formatButton(fightBandit, 0, 0);
+        fightBandit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                game.fightBandit();
+                encounterScreen.setVisible(false);
+                ship.changeFuel(-game.getCost(to));
+                // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/" + ship.getMaxFuel());
+                game.getPlayer().setCurrReg(to);
+                setUpRegionScreen();
+            }
+        });
+        addWithGBC(encounterScreen, demandBandit, new int[] {0, 2, 1, 1, 0, 0});
+        addWithGBC(encounterScreen, fleeBandit, new int[] {0, 3, 1, 1, 0, 0});
+        addWithGBC(encounterScreen, fightBandit, new int[] {0, 4, 1, 1, 0, 0});
+        return encounterScreen;
     }
 
     public void changeTargetDisplay(Region region, JLabel image,
