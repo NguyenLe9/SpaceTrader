@@ -1,10 +1,5 @@
 interface NonPlayable {
 
-
-
-    // return the type of NPC in String format. The String should be initialized in the constructor
-    String getType();
-
     // return the dialogue of NPC in String format
     String getSpeak();
 

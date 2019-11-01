@@ -645,15 +645,15 @@ public class SpaceTraderDriver extends JFrame {
             addWithGBC(encounterScreen, portrait, new int[] {0, 0, 1, 1, 0, 0});
             addWithGBC(encounterScreen, dialogue, new int[] {0, 1, 1, 1, 0, 0});
 
-            if (encounter.getType().equals("Trader")) {
+            if (encounter instanceof Trader) {
                 // encounter = (Trader) encounter;
                 encounterScreen = setUpTraderEcounter((Trader) encounter, encounterScreen, to);
                 //do trader things
-            } else if (encounter.getType().equals("Bandit")) {
+            } else if (encounter instanceof Bandit) {
                 // encounter = (Bandit) encounter;
                 encounterScreen = setUpBanditEncounter((Bandit) encounter, encounterScreen, from, to);
                 //do bandit things
-            } else if (encounter.getType().equals("Police")) {
+            } else if (encounter instanceof Police) {
                 // encounter = (Police) encounter;
                 encounterScreen = setUpPoliceEncounter((Police) encounter, encounterScreen, from, to);
                 //do police things
@@ -669,7 +669,7 @@ public class SpaceTraderDriver extends JFrame {
         }
     }
 
-    public JPanel setUpTraderEcounter(Trader encounter, JPanel encounterScreen, Region to) {
+    public void setUpTraderEcounter(Trader encounter, JPanel encounterScreen, Region to) {
         Ship ship = game.getPlayer().getShip();
         JButton buyItems = new JButton("Buy");
         formatButton(buyItems, 0, 0);
@@ -715,9 +715,8 @@ public class SpaceTraderDriver extends JFrame {
         addWithGBC(encounterScreen, buyItems, new int[] {0, 2, 1, 1, 0, 0});
         addWithGBC(encounterScreen, ignoreTrader, new int[] {0, 2, 1, 1, 0, 0});
         addWithGBC(encounterScreen, robTrader, new int[] {0, 3, 1, 1, 0, 0});
-        return encounterScreen;
     }
-    public JPanel setUpPoliceEncounter(Police encounter, JPanel encounterScreen, Region from, Region to) {
+    public void setUpPoliceEncounter(Police encounter, JPanel encounterScreen, Region from, Region to) {
         Ship ship = game.getPlayer().getShip();
         JButton forfeitItems = new JButton("Forfeit Items");
         formatButton(forfeitItems, 0, 0);
@@ -757,9 +756,8 @@ public class SpaceTraderDriver extends JFrame {
         addWithGBC(encounterScreen, forfeitItems, new int[] {0, 2, 1, 1, 0, 0});
         addWithGBC(encounterScreen, fleePolice, new int[] {0, 3, 1, 1, 0, 0});
         addWithGBC(encounterScreen, fightPolice, new int[] {0, 4, 1, 1, 0, 0});
-        return encounterScreen;
     }
-    public JPanel setUpBanditEncounter(Bandit encounter, JPanel encounterScreen, Region from, Region to) {
+    public void setUpBanditEncounter(Bandit encounter, JPanel encounterScreen, Region from, Region to) {
         Ship ship = game.getPlayer().getShip();
         JButton demandBandit = new JButton("Pay Demand");
         formatButton(demandBandit, 0, 0);
@@ -799,7 +797,6 @@ public class SpaceTraderDriver extends JFrame {
         addWithGBC(encounterScreen, demandBandit, new int[] {0, 2, 1, 1, 0, 0});
         addWithGBC(encounterScreen, fleeBandit, new int[] {0, 3, 1, 1, 0, 0});
         addWithGBC(encounterScreen, fightBandit, new int[] {0, 4, 1, 1, 0, 0});
-        return encounterScreen;
     }
 
     public void changeTargetDisplay(Region region, JLabel image,
