@@ -5,13 +5,13 @@ public class Trader implements NonPlayable {
     private int price; // new price
     private int damage;
 
-    public Trader() {
-        this.market = null;
-        this.region = null;
-        this.offered = null;
-        this.price = 0;
-        this.damage = 0;
-    }
+    // public Trader() {
+    //     this.market = null;
+    //     this.region = null;
+    //     this.offered = null;
+    //     this.price = 0;
+    //     this.damage = 0;
+    // }
 
     // Trader takes the Market of the Region they're in
     public Trader(Region region) {
@@ -60,10 +60,11 @@ public class Trader implements NonPlayable {
     }
 
     public String getSpeak() {
+        String name = offered.getName();
         return "Do you want to trade " + offered.getName() + " for " + price;
     }
 
     public String getImageName() {
-        return "trader.jpg";
+        return "Graphics/trader.jpg";
     }
 }

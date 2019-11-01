@@ -55,6 +55,6 @@ public class Police implements NonPlayable {
     }
 
     public String getImageName() {
-        return "police.jpg";
+        return "Graphics/police.jpg";
     }
 }

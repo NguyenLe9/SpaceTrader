@@ -68,7 +68,7 @@ public class Game {
         int encounterRoll = random.nextInt(101);
         int diffMult = calcDiffMult();
         if (encounterRoll < 5) {
-            return new Trader();
+            return new Trader(player.getCurrReg());
         } else if (encounterRoll - 5 < 5 * diffMult) {
             return new Bandit();
         } else if (encounterRoll - (5 * diffMult + 5) < 5 * diffMult

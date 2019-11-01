@@ -1,4 +1,4 @@
-interface NonPlayable {
+public interface NonPlayable {
 
     // return the dialogue of NPC in String format
     String getSpeak();

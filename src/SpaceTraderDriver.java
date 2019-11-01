@@ -664,6 +664,7 @@ public class SpaceTraderDriver extends JFrame {
                 null, "Invalid Encounter Type",
                 "ERROR", JOptionPane.WARNING_MESSAGE);
         }
+        this.contentPane.add(encounterScreen);
         encounterScreen.setVisible(true);
         // } catch (java.io.IOException e) {
         //     e.printStackTrace();
@@ -716,6 +717,7 @@ public class SpaceTraderDriver extends JFrame {
         addWithGBC(encounterScreen, buyItems, new int[] {0, 2, 1, 1, 0, 0});
         addWithGBC(encounterScreen, ignoreTrader, new int[] {0, 2, 1, 1, 0, 0});
         addWithGBC(encounterScreen, robTrader, new int[] {0, 3, 1, 1, 0, 0});
+        // encounterScreen.setVisible(true);
     }
     public void setUpPoliceEncounter(Police police, Region from, Region to) {
         Ship ship = game.getPlayer().getShip();
@@ -757,6 +759,7 @@ public class SpaceTraderDriver extends JFrame {
         addWithGBC(encounterScreen, forfeitItems, new int[] {0, 2, 1, 1, 0, 0});
         addWithGBC(encounterScreen, fleePolice, new int[] {0, 3, 1, 1, 0, 0});
         addWithGBC(encounterScreen, fightPolice, new int[] {0, 4, 1, 1, 0, 0});
+        // encounterScreen.setVisible(true);
     }
     public void setUpBanditEncounter(Bandit bandit, Region from, Region to) {
         Ship ship = game.getPlayer().getShip();
@@ -798,6 +801,7 @@ public class SpaceTraderDriver extends JFrame {
         addWithGBC(encounterScreen, demandBandit, new int[] {0, 2, 1, 1, 0, 0});
         addWithGBC(encounterScreen, fleeBandit, new int[] {0, 3, 1, 1, 0, 0});
         addWithGBC(encounterScreen, fightBandit, new int[] {0, 4, 1, 1, 0, 0});
+        // encounterScreen.setVisible(true);
     }
 
     public void changeTargetDisplay(Region region, JLabel image,

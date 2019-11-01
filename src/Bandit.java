@@ -30,6 +30,6 @@ public class Bandit implements NonPlayable {
     }
 
     public String getImageName() {
-        return "bandit.jpg";
+        return "Graphics/bandit.jpg";
     }
 }
