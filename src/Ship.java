@@ -73,13 +73,10 @@ public class Ship {
         this.fuel += i;
     }
 
-<<<<<<< HEAD
-=======
     public void changeHealth(int i) {
         this.health += i;
     }
 
->>>>>>> Bryan
     public void setCargo(int cargo) {
         this.cargo = cargo;
     }

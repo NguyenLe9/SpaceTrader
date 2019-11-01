@@ -4,7 +4,7 @@ public class Game {
     private Universe universe;
     private Player player;
     private String difficulty;
-    private Random random;
+    private Random random = new Random();
 
     public Game(int[] skills, int credit, String difficulty) {
         this.universe = Universe.getUniverse();
@@ -24,19 +24,7 @@ public class Game {
     }
 
     public int getCost(Region destination) {
-<<<<<<< HEAD
-        // implement a modifier to change cost depending on player's pilot skill
-        int diffMult;
-        if (getDifficulty().equals("Easy")) {
-            diffMult = 1;
-        } else if (getDifficulty().equals("Normal")) {
-            diffMult = 2;
-        } else {
-            diffMult = 3;
-        }
-=======
         int diffMult = calcDiffMult();
->>>>>>> Bryan
         return (int) ((getDistance(destination) * diffMult / 5)
             / Math.sqrt(1 + this.getPlayer().getpPoint()));
     }
@@ -85,7 +73,7 @@ public class Game {
             return new Bandit();
         } else if (encounterRoll - (5 * diffMult + 5) < 5 * diffMult
                 && this.player.getShip().getCargo() > 0) {
-            return new Police();
+            return new Police(this.player.getShip().getInventory());
         }
         return null;
     }

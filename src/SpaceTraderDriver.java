@@ -527,7 +527,7 @@ public class SpaceTraderDriver extends JFrame {
         JTextField targetTech = new JTextField("Tech Level:\t" + game
             .getPlayer().getCurrReg().getTechLevel());
         formatText(targetTech, false, 0, 0);
-        JTextField targetCost = new JTextField("Cost:\t0.00");
+        JTextField targetCost = new JTextField("Cost:\t0");
         formatText(targetCost, false, 0, 0);
         targetedRegion = game.getPlayer().getCurrReg();
 
@@ -594,27 +594,10 @@ public class SpaceTraderDriver extends JFrame {
         confirmTravel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (targetedRegion != null) {
-<<<<<<< HEAD
-                    mapScreen.setVisible(false);
-=======
->>>>>>> Bryan
                     if (!game.checkTravel(targetedRegion)) {
                         JOptionPane.showMessageDialog(
                             null, "CANNOT TRAVEL DUE TO INSUFFICIENT FUEL",
                             "ERROR", JOptionPane.WARNING_MESSAGE);
-<<<<<<< HEAD
-                        mapScreen.setVisible(true);
-                    } else {
-                        // aliasing for easier to read code
-                        Ship ship = game.getPlayer().getShip();
-                        ship.changeFuel(-game.getCost(targetedRegion));
-                        shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/"
-                            + ship.getMaxFuel());
-                        game.getPlayer().setCurrReg(targetedRegion);
-                        setUpRegionScreen();
-                        // calculate buy and sell prices depending on player merchant skill
-                        game.calculateMarketPrice();
-=======
                     } else {
                         mapScreen.setVisible(false);
                         Ship ship = game.getPlayer().getShip();
@@ -630,7 +613,6 @@ public class SpaceTraderDriver extends JFrame {
                         } else {
                             setUpEncounterScreen(encounter, game.getPlayer().getCurrReg(), targetedRegion);
                         }
->>>>>>> Bryan
                     }
                 }
             }
@@ -651,44 +633,44 @@ public class SpaceTraderDriver extends JFrame {
     }
 
     public void setUpEncounterScreen(NonPlayable encounter, Region from, Region to) {
-        try {
-            // TODO: once code is functional, test to see how big image should be and scale accordinly
-            Image img = new ImageIcon(encounter.getImage()).getImage()
-                    .getScaledInstance(850, 535, Image.SCALE_DEFAULT);
-            JLabel portrait = new JLabel(new ImageIcon(img));
-            JTextField dialogue = new JTextField(encounter.getSpeak());
-            formatText(dialogue, false, 0, 0);
+        // try {
+        // TODO: once code is functional, test to see how big image should be and scale accordinly
+        Image img = new ImageIcon(encounter.getImageName()).getImage()
+                .getScaledInstance(850, 535, Image.SCALE_DEFAULT);
+        JLabel portrait = new JLabel(new ImageIcon(img));
+        JTextField dialogue = new JTextField(encounter.getSpeak());
+        formatText(dialogue, false, 0, 0);
 
-            encounterScreen = new JPanel();
-            encounterScreen.setLayout(new GridBagLayout());
-            addWithGBC(encounterScreen, portrait, new int[] {0, 0, 1, 1, 0, 0});
-            addWithGBC(encounterScreen, dialogue, new int[] {0, 1, 1, 1, 0, 0});
+        encounterScreen = new JPanel();
+        encounterScreen.setLayout(new GridBagLayout());
+        addWithGBC(encounterScreen, portrait, new int[] {0, 0, 1, 1, 0, 0});
+        addWithGBC(encounterScreen, dialogue, new int[] {0, 1, 1, 1, 0, 0});
 
-            if (encounter instanceof Trader) {
-                // encounter = (Trader) encounter;
-                encounterScreen = setUpTraderEcounter((Trader) encounter, encounterScreen, to);
-                //do trader things
-            } else if (encounter instanceof Bandit) {
-                // encounter = (Bandit) encounter;
-                encounterScreen = setUpBanditEncounter((Bandit) encounter, encounterScreen, from, to);
-                //do bandit things
-            } else if (encounter instanceof Police) {
-                // encounter = (Police) encounter;
-                encounterScreen = setUpPoliceEncounter((Police) encounter, encounterScreen, from, to);
-                //do police things
-            } else {
-                // Sanity check, this statement should never be reached
-                JOptionPane.showMessageDialog(
-                    null, "Invalid Encounter Type",
-                    "ERROR", JOptionPane.WARNING_MESSAGE);
-            }
-            encounterScreen.setVisible(true);
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
+        if (encounter instanceof Trader) {
+            // encounter = (Trader) encounter;
+            setUpTraderEcounter((Trader) encounter, to);
+            //do trader things
+        } else if (encounter instanceof Bandit) {
+            // encounter = (Bandit) encounter;
+            setUpBanditEncounter((Bandit) encounter, from, to);
+            //do bandit things
+        } else if (encounter instanceof Police) {
+            // encounter = (Police) encounter;
+            setUpPoliceEncounter((Police) encounter, from, to);
+            //do police things
+        } else {
+            // Sanity check, this statement should never be reached
+            JOptionPane.showMessageDialog(
+                null, "Invalid Encounter Type",
+                "ERROR", JOptionPane.WARNING_MESSAGE);
         }
+        encounterScreen.setVisible(true);
+        // } catch (java.io.IOException e) {
+        //     e.printStackTrace();
+        // }
     }
 
-    public void setUpTraderEcounter(Trader encounter, JPanel encounterScreen, Region to) {
+    public void setUpTraderEcounter(Trader trader, Region to) {
         Ship ship = game.getPlayer().getShip();
         JButton buyItems = new JButton("Buy");
         formatButton(buyItems, 0, 0);
@@ -735,13 +717,13 @@ public class SpaceTraderDriver extends JFrame {
         addWithGBC(encounterScreen, ignoreTrader, new int[] {0, 2, 1, 1, 0, 0});
         addWithGBC(encounterScreen, robTrader, new int[] {0, 3, 1, 1, 0, 0});
     }
-    public void setUpPoliceEncounter(Police encounter, JPanel encounterScreen, Region from, Region to) {
+    public void setUpPoliceEncounter(Police police, Region from, Region to) {
         Ship ship = game.getPlayer().getShip();
         JButton forfeitItems = new JButton("Forfeit Items");
         formatButton(forfeitItems, 0, 0);
         forfeitItems.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                game.forfeitItemsPolice(encounter.getForfeitList());
+                game.forfeitItemsPolice(police.getSuspected());
                 encounterScreen.setVisible(false);
                 ship.changeFuel(-game.getCost(to));
                 // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/" + ship.getMaxFuel());
@@ -753,7 +735,7 @@ public class SpaceTraderDriver extends JFrame {
         formatButton(fleePolice, 0, 0);
         fleePolice.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                game.fleePolice(encounter.getForfeitList(), from, to);
+                game.fleePolice(police.getSuspected(), from, to);
                 encounterScreen.setVisible(false);
                 ship.changeFuel(-game.getCost(to));
                 // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/" + ship.getMaxFuel());
@@ -764,7 +746,7 @@ public class SpaceTraderDriver extends JFrame {
         formatButton(fightPolice, 0, 0);
         fightPolice.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                game.fightPolice(encounter.getForfeitList());
+                game.fightPolice(police.getSuspected());
                 encounterScreen.setVisible(false);
                 ship.changeFuel(-game.getCost(to));
                 // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/" + ship.getMaxFuel());
@@ -776,13 +758,13 @@ public class SpaceTraderDriver extends JFrame {
         addWithGBC(encounterScreen, fleePolice, new int[] {0, 3, 1, 1, 0, 0});
         addWithGBC(encounterScreen, fightPolice, new int[] {0, 4, 1, 1, 0, 0});
     }
-    public void setUpBanditEncounter(Bandit encounter, JPanel encounterScreen, Region from, Region to) {
+    public void setUpBanditEncounter(Bandit bandit, Region from, Region to) {
         Ship ship = game.getPlayer().getShip();
         JButton demandBandit = new JButton("Pay Demand");
         formatButton(demandBandit, 0, 0);
         demandBandit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                game.payBandit(encounter.getDemand());
+                game.payBandit(bandit.getLoot());
                 encounterScreen.setVisible(false);
                 ship.changeFuel(-game.getCost(to));
                 // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/" + ship.getMaxFuel());
@@ -794,7 +776,7 @@ public class SpaceTraderDriver extends JFrame {
         formatButton(fleeBandit, 0, 0);
         fleeBandit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                game.fleeBandit(encounter.getDemand());
+                game.fleeBandit(bandit.getLoot(), to, from);
                 encounterScreen.setVisible(false);
                 ship.changeFuel(-game.getCost(to));
                 // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/" + ship.getMaxFuel());
