@@ -1,32 +1,23 @@
 public class Bandit implements NonPlayable {
     private int loot;
     // this equals to bandit's credit?
+    private String speak;
 
-    public Bandit() {
-        this.loot = 0;
-    }
-
-    // Use this constructor to create a Bandit
-    // with a number of credit demand (= loot)
     public Bandit(int loot) {
         this.loot = loot;
+        this.speak = "\"Give me " + loot + " now!!!\"";
     }
 
     public int getLoot() {
         return this.loot;
     }
 
-    // take from player
-    public void gainLoot(Player player) {
-        if (player.getCredit() < loot) {
-            player.changeCredit(0);
-        } else {
-            player.changeCredit(player.getCredit() - this.loot);
-        }
+    public void setSpeak(String s) {
+        this.speak = s;
     }
 
     public String getSpeak() {
-        return "Give me " + loot + " now!!!";
+        return this.speak;
     }
 
     public String getImageName() {

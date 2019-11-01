@@ -4,14 +4,8 @@ public class Trader implements NonPlayable {
     private Item offered; // the item to offer
     private int price; // new price
     private int damage;
-
-    // public Trader() {
-    //     this.market = null;
-    //     this.region = null;
-    //     this.offered = null;
-    //     this.price = 0;
-    //     this.damage = 0;
-    // }
+    private String speak;
+    private boolean sold;
 
     // Trader takes the Market of the Region they're in
     public Trader(Region region) {
@@ -21,6 +15,8 @@ public class Trader implements NonPlayable {
         this.offered = market.getItem()[itemIndex]; // get a random item
         this.price = offered.getPrice();
         this.damage = 0;
+        this.speak = "\"Got some rare things on sale, stranger!\" (Trader wants to sell " + offered.getName() + " for " + price + ")";
+        this.sold = false;
     }
 
     public void setRegion(Region region) {
@@ -59,9 +55,20 @@ public class Trader implements NonPlayable {
         player.getShip().setHealth(newHealth);
     }
 
+    public void setSold(boolean b) {
+        this.sold = b;
+    }
+
+    public boolean getSold() {
+        return this.sold;
+    }
+
+    public void setSpeak(String s) {
+        this.speak = s;
+    }
+
     public String getSpeak() {
-        String name = offered.getName();
-        return "Do you want to trade " + offered.getName() + " for " + price;
+        return this.speak;
     }
 
     public String getImageName() {

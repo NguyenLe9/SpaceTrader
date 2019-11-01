@@ -30,4 +30,5 @@ public class Market {
     public Item[] getItem() {
         return this.item;
     }
+
 }

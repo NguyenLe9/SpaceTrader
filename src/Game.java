@@ -70,7 +70,7 @@ public class Game {
         if (encounterRoll < 5) {
             return new Trader(player.getCurrReg());
         } else if (encounterRoll - 5 < 5 * diffMult) {
-            return new Bandit();
+            return new Bandit((int) (this.player.getCredit() * random.nextDouble()));
         } else if (encounterRoll - (5 * diffMult + 5) < 5 * diffMult
                 && this.player.getShip().getCargo() > 0) {
             return new Police(this.player.getShip().getInventory());
@@ -88,84 +88,115 @@ public class Game {
         }
     }
 
-    public void robTrader() {
+    public void buyTrader(Trader trader) {
+        if (trader.getPrice() < this.player.getCredit()) {
+            for (Item i: this.player.getShip().getInventory()) {
+                if (trader.getOffered().getName().equals(i.getName())) {
+                    i.changeAmount(1);
+                }
+            }
+            this.player.changeCredit(-trader.getPrice());
+            trader.setSpeak("\"Heh heh heh... Thank you!\"");
+            trader.setSold(true);
+        } else {
+            trader.setSpeak("\"Not enough cash, stranger!\"");
+        }
+
+    }
+
+    public void robTrader(Trader trader) {
         if (random.nextInt(101) > 90 - 5 * this.player.getfPoint()) {
-            // successful
-
-            // TODO: wait for Trader implementation
-            // for each item in Trader inventory, rng chance of obtaining (50/50)
+            for (Item i: this.player.getShip().getInventory()) {
+                if (trader.getOffered().getName().equals(i.getName())) {
+                    i.changeAmount(1);
+                }
+            }
+            trader.setSpeak("Successfully robbed the trader.");
         } else {
-            // failure, penalty is 20 HP from ship
             this.player.getShip().changeHealth(-20);
+            trader.setSpeak("Unable to rob the trader. Ship was damaged.");
         }
     }
-    public void negotiateTrader() {
-        double priceMod;
+    public void negotiateTrader(Trader trader) {
         if (random.nextInt(101) > 90 - 5 * this.player.getmPoint()) {
-            priceMod = 0.5;
+            trader.setPrice(trader.getPrice() / 2);
+            trader.setSpeak("Negotiation successful. The price is now " + trader.getPrice() + ".");
         } else {
-            priceMod = 2;
+            trader.setPrice(trader.getPrice() * 2);
+            trader.setSpeak("Negotiation failed. The price is now " + trader.getPrice() + ".");
         }
-        // TODO: wait for Trader implementation
-        // for each item in Trader inventory, apply priceMod
     }
 
-    public void forfeitItemsPolice(Item[] demands) {
+    public void forfeitItemsPolice(Police police) {
         for (int i = 0; i < this.player.getShip().getInventory().length; i++) {
-            this.player.getShip().getInventory()[i].changeAmount(-demands[i].getAmount());
+            this.player.getShip().getInventory()[i].changeAmount(-police.getSuspected()[i].getAmount());
         }
+        police.setSpeak("\"Thank you for your cooperation.\"");
     }
 
-    public void fleePolice(Item[] demands, Region from, Region to) {
+    public void fleePolice(Police police, Region from, Region to) {
         if (random.nextInt(101) > 90 - 5 * this.player.getpPoint()) {
             // Ship ship = game.getPlayer().getShip();
-            this.player.getShip().changeFuel(-getCost(to));
-            this.player.setCurrReg(from);
+            // this.player.getShip().changeFuel(-getCost(to));
+            // this.player.setCurrReg(from);
+            police.setSpeak("Successfully escaped.");
         } else {
-            forfeitItemsPolice(demands);
+            forfeitItemsPolice(police);
             this.player.getShip().changeHealth(-20);
-            this.player.changeCredit((int) (-this.player.getCredit() * 0.2));
-            this.player.setCurrReg(to);
+            this.player.changeCredit((int) (-this.player.getCredit() * 0.3));
+            // this.player.setCurrReg(to);
+            police.setSpeak("Unable to escape. Goods were confiscated and was fined " + (this.player.getCredit() * 0.3) + ".");
         }
     }
 
-    public void fightPolice(Item[] demands) {
+    public void fightPolice(Police police) {
         // only a failure state is needed for this one
-        if (random.nextInt(101) < 90 - 5 * this.player.getfPoint()) {
-            forfeitItemsPolice(demands);
+        if (random.nextInt(101) > 90 - 5 * this.player.getfPoint()) {
+            police.setSpeak("Fought off the police.");
+        } else {
+            forfeitItemsPolice(police);
             this.player.getShip().changeHealth(-60);
             this.player.changeCredit((int) (-this.player.getCredit() * 0.5));
+            police.setSpeak("Defeated by the police. The ship was damaged and was fined " + (this.player.getCredit() * 0.5) + ".");
         }
     }
 
-    public void payBandit(int demand) {
-        if (this.player.getCredit() > demand) {
-            this.player.changeCredit(-demand);
+    public void payBandit(Bandit bandit) {
+        if (this.player.getCredit() > bandit.getLoot()) {
+            this.player.changeCredit(-bandit.getLoot());
+            bandit.setSpeak("Paid the bandit.");
         } else if (this.player.getShip().getCargo() > 0) {
             for (Item i: this.player.getShip().getInventory()) {
                 i.setAmount(0);
             }
+            bandit.setSpeak("Unable to pay the bandit. They took some supplies instead.");
         } else {
             this.player.getShip().changeHealth(-60);
+            bandit.setSpeak("Unable to pay the bandit. They ransacked the ship.");
         }
     }
-    public void fleeBandit(int demand, Region from, Region to) {
+    public void fleeBandit(Bandit bandit, Region from, Region to) {
         if (random.nextInt(101) > 90 - 5 * this.player.getpPoint()) {
             // Ship ship = game.getPlayer().getShip();
-            this.player.setCurrReg(from);
+            // this.player.setCurrReg(from);
+            bandit.setSpeak("Successfully escaped.");
         } else {
             this.player.setCredit(0);
             this.player.getShip().changeHealth(-20);
-            this.player.setCurrReg(to);
+            // this.player.setCurrReg(to);
+            bandit.setSpeak("Unable to escape. Bandit took all the money and damaged the ship.");
         }
     }
 
-    public void fightBandit() {
+    public void fightBandit(Bandit bandit) {
         if (random.nextInt(101) > 90 - 5 * this.player.getfPoint()) {
-            this.player.changeCredit(random.nextInt(3000));
+            int loot = random.nextInt(3000);
+            this.player.changeCredit(loot);
+            bandit.setSpeak("Fought off the bandit. Bandit dropped " + loot + " as they ran away.");
         } else {
             this.player.setCredit(0);
             this.player.getShip().changeHealth(-60);
+            bandit.setSpeak("Failed to fight off the bandit. They took all the money and damaged the ship");
         }
     }
 }
