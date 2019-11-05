@@ -128,10 +128,18 @@ public class Game {
     }
 
     public void forfeitItemsPolice(Police police) {
-        for (int i = 0; i < this.player.getShip().getInventory().length; i++) {
-            this.player.getShip().getInventory()[i]
-                .changeAmount(-police.getSuspected()[i].getAmount());
+        for (int i = 0; i < police.getSuspected().length; i++) {
+            for (int j = 0; j < this.player.getShip().getInventory().length; j++) {
+                if (this.player.getShip().getInventory()[j].getName()
+                        .equals(police.getSuspected()[i].getName())) {
+                    this.player.getShip().getInventory()[j].changeAmount(-1);
+                }
+            }
         }
+        // for (int i = 0; i < this.player.getShip().getInventory().length; i++) {
+        //     this.player.getShip().getInventory()[i]
+        //         .changeAmount(-police.getSuspected()[i].getAmount());
+        // }
         police.setSpeak("\"Thank you for your cooperation.\"");
     }
 

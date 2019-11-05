@@ -5,26 +5,15 @@ public class Police implements NonPlayable {
 
 
     public Police(Item[] inventory) {
-        int numItem = (int) (Math.random() * (inventory.length)); // random # of items
-        suspected = new Item[numItem];
-        for (int i = 0; i < numItem; i++) {
-            int itemIndex = (int) (Math.random() * (inventory.length));
-            if (inventory[itemIndex] != null) {
-                suspected[i] = inventory[itemIndex];
-            }
-            // whether items are truly stolen is unknown
-            inventory[itemIndex] = null;
-        }
+        generateSuspected(inventory);
         String items = "";
-        if (suspected.length == 1) {
-            items = suspected[0].getName();
-        } else {
-            for (Item item : suspected) {
-                items += item.getName() + ", ";
-            }
+        for (Item item: suspected) {
+            items += item.getName() + ", ";
+        }
+        if (items.length() > 2) {
             items = items.substring(0, items.length() - 2);
         }
-        this.speak = "\"I'm going to consficate " + items + ".\"";
+        this.speak = "\"I am going to confiscate " + items + ".\"";
     }
 
     public Item[] getSuspected() {
@@ -33,6 +22,21 @@ public class Police implements NonPlayable {
 
     public int getDamage() {
         return this.damage;
+    }
+
+    public void generateSuspected(Item[] items) {
+        int cargo = 0;
+        for (Item i: items) {
+            cargo += i.getAmount();
+        }
+        suspected = new Item[(int) (Math.random() * (cargo / 2)) + 1];
+        for (int i = 0; i < suspected.length; i++) {
+            int itemIndex = (int) (Math.random() * items.length);
+            while (items[itemIndex].getAmount() == 0) {
+                itemIndex = (int) (Math.random() * items.length);
+            }
+            suspected[i] = items[itemIndex];
+        }
     }
 
     public void attack(Player player) {

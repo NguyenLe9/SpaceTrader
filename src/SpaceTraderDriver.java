@@ -632,10 +632,10 @@ public class SpaceTraderDriver extends JFrame {
     }
 
     public void setUpEncounterScreen(NonPlayable encounter, Region from, Region to) {
-        JOptionPane.showMessageDialog(
-                            null, "To the one that is responsible for testing this, go comment out "
-                            + "or delete lines 635-638 in SpaceTraderDriver.java. -Bryan",
-                            "ERROR", JOptionPane.WARNING_MESSAGE);
+        // JOptionPane.showMessageDialog(
+        //     null, "To the one that is responsible for testing this, go comment out "
+        //     + "or delete lines 635-638 in SpaceTraderDriver.java. -Bryan",
+        //     "ERROR", JOptionPane.WARNING_MESSAGE);
         Image img = new ImageIcon(encounter.getImageName()).getImage()
                 .getScaledInstance(300, 500, Image.SCALE_DEFAULT);
         JLabel portrait = new JLabel(new ImageIcon(img));
@@ -723,6 +723,7 @@ public class SpaceTraderDriver extends JFrame {
     }
     public void setUpPoliceEncounter(Police police, Region from,
             JTextField dialogue, JButton onwards) {
+        onwards.setEnabled(false);
         Ship ship = game.getPlayer().getShip();
         JButton forfeitItems = new JButton("Forfeit Items");
         formatButton(forfeitItems, 0, 0);
@@ -738,6 +739,7 @@ public class SpaceTraderDriver extends JFrame {
                 forfeitItems.setEnabled(false);
                 fleePolice.setEnabled(false);
                 fightPolice.setEnabled(false);
+                onwards.setEnabled(true);
                 // encounterScreen.setVisible(false);
                 // ship.changeFuel(-game.getCost(to));
                 // // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/" + ship.getMaxFuel());
@@ -752,6 +754,7 @@ public class SpaceTraderDriver extends JFrame {
                 forfeitItems.setEnabled(false);
                 fleePolice.setEnabled(false);
                 fightPolice.setEnabled(false);
+                onwards.setEnabled(true);
                 // encounterScreen.setVisible(false);
                 // ship.changeFuel(-game.getCost(to));
                 // // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/" + ship.getMaxFuel());
@@ -765,6 +768,7 @@ public class SpaceTraderDriver extends JFrame {
                 forfeitItems.setEnabled(false);
                 fleePolice.setEnabled(false);
                 fightPolice.setEnabled(false);
+                onwards.setEnabled(true);
                 // encounterScreen.setVisible(false);
                 // ship.changeFuel(-game.getCost(to));
                 // // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/" + ship.getMaxFuel());
@@ -779,6 +783,7 @@ public class SpaceTraderDriver extends JFrame {
     }
     public void setUpBanditEncounter(Bandit bandit, Region from,
             JTextField dialogue, JButton onwards) {
+        onwards.setEnabled(false);
         Ship ship = game.getPlayer().getShip();
         JButton demandBandit = new JButton("Pay Demand");
         formatButton(demandBandit, 0, 0);
@@ -795,6 +800,7 @@ public class SpaceTraderDriver extends JFrame {
                 demandBandit.setEnabled(false);
                 fleeBandit.setEnabled(false);
                 fightBandit.setEnabled(false);
+                onwards.setEnabled(true);
                 // encounterScreen.setVisible(false);
                 // ship.changeFuel(-game.getCost(to));
                 // // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/" + ship.getMaxFuel());
@@ -809,6 +815,7 @@ public class SpaceTraderDriver extends JFrame {
                 demandBandit.setEnabled(false);
                 fleeBandit.setEnabled(false);
                 fightBandit.setEnabled(false);
+                onwards.setEnabled(true);
                 // encounterScreen.setVisible(false);
                 // ship.changeFuel(-game.getCost(to));
                 // // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/" + ship.getMaxFuel());
@@ -822,6 +829,7 @@ public class SpaceTraderDriver extends JFrame {
                 demandBandit.setEnabled(false);
                 fleeBandit.setEnabled(false);
                 fightBandit.setEnabled(false);
+                onwards.setEnabled(true);
                 // encounterScreen.setVisible(false);
                 // ship.changeFuel(-game.getCost(to));
                 // // shipFuel.setText("Ship Fuel: " + ship.getFuel() + "/" + ship.getMaxFuel());
