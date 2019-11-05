@@ -632,10 +632,6 @@ public class SpaceTraderDriver extends JFrame {
     }
 
     public void setUpEncounterScreen(NonPlayable encounter, Region from, Region to) {
-        // JOptionPane.showMessageDialog(
-        //     null, "To the one that is responsible for testing this, go comment out "
-        //     + "or delete lines 635-638 in SpaceTraderDriver.java. -Bryan",
-        //     "ERROR", JOptionPane.WARNING_MESSAGE);
         Image img = new ImageIcon(encounter.getImageName()).getImage()
                 .getScaledInstance(300, 500, Image.SCALE_DEFAULT);
         JLabel portrait = new JLabel(new ImageIcon(img));
