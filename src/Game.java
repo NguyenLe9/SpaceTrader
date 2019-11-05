@@ -129,23 +129,25 @@ public class Game {
 
     public void forfeitItemsPolice(Police police) {
         for (int i = 0; i < this.player.getShip().getInventory().length; i++) {
-            this.player.getShip().getInventory()[i].changeAmount(-police.getSuspected()[i].getAmount());
+            this.player.getShip().getInventory()[i]
+                .changeAmount(-police.getSuspected()[i].getAmount());
         }
         police.setSpeak("\"Thank you for your cooperation.\"");
     }
 
-    public void fleePolice(Police police, Region from, Region to) {
+    public void fleePolice(Police police, Region from) {
         if (random.nextInt(101) > 90 - 5 * this.player.getpPoint()) {
             // Ship ship = game.getPlayer().getShip();
             // this.player.getShip().changeFuel(-getCost(to));
-            // this.player.setCurrReg(from);
+            this.player.setCurrReg(from);
             police.setSpeak("Successfully escaped.");
         } else {
             forfeitItemsPolice(police);
             this.player.getShip().changeHealth(-20);
             this.player.changeCredit((int) (-this.player.getCredit() * 0.3));
             // this.player.setCurrReg(to);
-            police.setSpeak("Unable to escape. Goods were confiscated and was fined " + (this.player.getCredit() * 0.3) + ".");
+            police.setSpeak("Unable to escape. Goods were confiscated and was fined "
+                + (this.player.getCredit() * 0.3) + ".");
         }
     }
 
@@ -157,7 +159,8 @@ public class Game {
             forfeitItemsPolice(police);
             this.player.getShip().changeHealth(-60);
             this.player.changeCredit((int) (-this.player.getCredit() * 0.5));
-            police.setSpeak("Defeated by the police. The ship was damaged and was fined " + (this.player.getCredit() * 0.5) + ".");
+            police.setSpeak("Defeated by the police. The ship was damaged and was fined "
+                + (this.player.getCredit() * 0.5) + ".");
         }
     }
 
@@ -175,10 +178,10 @@ public class Game {
             bandit.setSpeak("Unable to pay the bandit. They ransacked the ship.");
         }
     }
-    public void fleeBandit(Bandit bandit, Region from, Region to) {
+    public void fleeBandit(Bandit bandit, Region from) {
         if (random.nextInt(101) > 90 - 5 * this.player.getpPoint()) {
             // Ship ship = game.getPlayer().getShip();
-            // this.player.setCurrReg(from);
+            this.player.setCurrReg(from);
             bandit.setSpeak("Successfully escaped.");
         } else {
             this.player.setCredit(0);
@@ -196,7 +199,8 @@ public class Game {
         } else {
             this.player.setCredit(0);
             this.player.getShip().changeHealth(-60);
-            bandit.setSpeak("Failed to fight off the bandit. They took all the money and damaged the ship");
+            bandit.setSpeak("Failed to fight off the bandit. "
+                + "They took all the money and damaged the ship");
         }
     }
 }

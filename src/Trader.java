@@ -15,7 +15,8 @@ public class Trader implements NonPlayable {
         this.offered = market.getItem()[itemIndex]; // get a random item
         this.price = offered.getPrice();
         this.damage = 0;
-        this.speak = "\"Got some rare things on sale, stranger!\" (Trader wants to sell " + offered.getName() + " for " + price + ")";
+        this.speak = "\"Got some rare things on sale, stranger!\" (Trader wants to sell "
+            + offered.getName() + " for " + price + ")";
         this.sold = false;
     }
 

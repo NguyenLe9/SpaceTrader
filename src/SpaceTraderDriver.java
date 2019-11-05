@@ -32,7 +32,7 @@ public class SpaceTraderDriver extends JFrame {
     // Launch the application.
     public static void main(final String[] args) {
         EventQueue.invokeLater(new Runnable() {
-                    public void run() {
+            public void run() {
                 try {
                     SpaceTraderDriver spacetrade = new SpaceTraderDriver();
                     spacetrade.setVisible(true);
@@ -609,7 +609,8 @@ public class SpaceTraderDriver extends JFrame {
                             // calculate buy and sell prices depending on player merchant skill
                             game.calculateMarketPrice();
                         } else {
-                            setUpEncounterScreen(encounter, game.getPlayer().getCurrReg(), targetedRegion);
+                            setUpEncounterScreen(encounter,
+                                game.getPlayer().getCurrReg(), targetedRegion);
                         }
                     }
                 }
@@ -631,6 +632,10 @@ public class SpaceTraderDriver extends JFrame {
     }
 
     public void setUpEncounterScreen(NonPlayable encounter, Region from, Region to) {
+        JOptionPane.showMessageDialog(
+                            null, "To the one that is responsible for testing this, go comment out "
+                            + "or delete lines 635-638 in SpaceTraderDriver.java. -Bryan",
+                            "ERROR", JOptionPane.WARNING_MESSAGE);
         Image img = new ImageIcon(encounter.getImageName()).getImage()
                 .getScaledInstance(300, 500, Image.SCALE_DEFAULT);
         JLabel portrait = new JLabel(new ImageIcon(img));
@@ -649,18 +654,20 @@ public class SpaceTraderDriver extends JFrame {
 
         encounterScreen = new JPanel();
         encounterScreen.setLayout(new GridBagLayout());
-        addWithGBC(encounterScreen, portrait, new int[] {0, 0, 1, 1, 0, 0}, new Insets(0, 30, 0, 30));
-        addWithGBC(encounterScreen, dialogue, new int[] {0, 1, 1, 1, 0, 0}, new Insets(0, 30, 0, 30));
+        addWithGBC(encounterScreen, portrait, new int[] {0, 0, 1, 1, 0, 0},
+            new Insets(0, 30, 0, 30));
+        addWithGBC(encounterScreen, dialogue, new int[] {0, 1, 1, 1, 0, 0},
+            new Insets(0, 30, 0, 30));
         addWithGBC(encounterScreen, onwards, new int[] {1, 3, 1, 1, 0, 0});
 
         if (encounter instanceof Trader) {
-            setUpTraderEcounter((Trader) encounter, to, dialogue, onwards);
+            setUpTraderEcounter((Trader) encounter, from, dialogue, onwards);
             //do trader things
         } else if (encounter instanceof Bandit) {
-            setUpBanditEncounter((Bandit) encounter, from, to, dialogue, onwards);
+            setUpBanditEncounter((Bandit) encounter, from, dialogue, onwards);
             //do bandit things
         } else if (encounter instanceof Police) {
-            setUpPoliceEncounter((Police) encounter, from, to, dialogue, onwards);
+            setUpPoliceEncounter((Police) encounter, from, dialogue, onwards);
             //do police things
         } else {
             // Sanity check, this statement should never be reached
@@ -672,7 +679,8 @@ public class SpaceTraderDriver extends JFrame {
         encounterScreen.setVisible(true);
     }
 
-    public void setUpTraderEcounter(Trader trader, Region to, JTextField dialogue, JButton onwards) {
+    public void setUpTraderEcounter(Trader trader, Region from,
+            JTextField dialogue, JButton onwards) {
         Ship ship = game.getPlayer().getShip();
         JButton buyItems = new JButton("Buy");
         formatButton(buyItems, 0, 0);
@@ -685,7 +693,7 @@ public class SpaceTraderDriver extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 game.buyTrader(trader);
                 dialogue.setText(trader.getSpeak());
-                if (trader.getSold()){
+                if (trader.getSold()) {
                     buyItems.setEnabled(false);
                     robTrader.setEnabled(false);
                     negotiateTrader.setEnabled(false);
@@ -713,7 +721,8 @@ public class SpaceTraderDriver extends JFrame {
         addWithGBC(encounterScreen, negotiateTrader, new int[] {1, 2, 1, 1, 0, 0});
         // encounterScreen.setVisible(true);
     }
-    public void setUpPoliceEncounter(Police police, Region from, Region to, JTextField dialogue, JButton onwards) {
+    public void setUpPoliceEncounter(Police police, Region from,
+            JTextField dialogue, JButton onwards) {
         Ship ship = game.getPlayer().getShip();
         JButton forfeitItems = new JButton("Forfeit Items");
         formatButton(forfeitItems, 0, 0);
@@ -738,7 +747,7 @@ public class SpaceTraderDriver extends JFrame {
         });
         fleePolice.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                game.fleePolice(police, from, to);
+                game.fleePolice(police, from);
                 dialogue.setText(police.getSpeak());
                 forfeitItems.setEnabled(false);
                 fleePolice.setEnabled(false);
@@ -768,7 +777,8 @@ public class SpaceTraderDriver extends JFrame {
         addWithGBC(encounterScreen, fightPolice, new int[] {1, 2, 1, 1, 0, 0});
         // encounterScreen.setVisible(true);
     }
-    public void setUpBanditEncounter(Bandit bandit, Region from, Region to, JTextField dialogue, JButton onwards) {
+    public void setUpBanditEncounter(Bandit bandit, Region from,
+            JTextField dialogue, JButton onwards) {
         Ship ship = game.getPlayer().getShip();
         JButton demandBandit = new JButton("Pay Demand");
         formatButton(demandBandit, 0, 0);
@@ -794,7 +804,7 @@ public class SpaceTraderDriver extends JFrame {
         });
         fleeBandit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                game.fleeBandit(bandit, to, from);
+                game.fleeBandit(bandit, from);
                 dialogue.setText(bandit.getSpeak());
                 demandBandit.setEnabled(false);
                 fleeBandit.setEnabled(false);
