@@ -601,16 +601,18 @@ public class SpaceTraderDriver extends JFrame {
                     } else {
                         mapScreen.setVisible(false);
                         Ship ship = game.getPlayer().getShip();
+                        ship.changeFuel(-game.getCost(targetedRegion));
+                        Region prevReg = game.getPlayer().getCurrReg();
+                        game.getPlayer().setCurrReg(targetedRegion);
+
                         NonPlayable encounter = game.randomEncounter();
                         if (encounter == null) {
-                            ship.changeFuel(-game.getCost(targetedRegion));
-                            game.getPlayer().setCurrReg(targetedRegion);
                             setUpRegionScreen();
                             // calculate buy and sell prices depending on player merchant skill
                             game.calculateMarketPrice();
                         } else {
-                            setUpEncounterScreen(encounter,
-                                game.getPlayer().getCurrReg(), targetedRegion);
+                            setUpEncounterScreen(encounter, prevReg,
+                                game.getPlayer().getCurrReg());
                         }
                     }
                 }
@@ -642,9 +644,9 @@ public class SpaceTraderDriver extends JFrame {
         onwards.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 encounterScreen.setVisible(false);
-                game.getPlayer().getShip().changeFuel(-game.getCost(to));
-                game.getPlayer().setCurrReg(to);
+                // game.getPlayer().getShip().changeFuel(-game.getCost(to));
                 setUpRegionScreen();
+                game.calculateMarketPrice();
             }
         });
 
