@@ -5,6 +5,7 @@ public class Game {
     private Player player;
     private String difficulty;
     private Random random = new Random();
+    private static int karma = 0;
 
     public Game(int[] skills, int credit, String difficulty) {
         this.universe = Universe.getUniverse();
@@ -49,6 +50,9 @@ public class Game {
     }
     public Universe getUniverse() {
         return this.universe;
+    }
+    public int getKarma() {
+        return karma;
     }
 
     public void calculateMarketPrice() {
@@ -101,6 +105,7 @@ public class Game {
         } else {
             trader.setSpeak("\"Not enough cash, stranger!\"");
         }
+        this.player.getShip().changeCargo(1);
 
     }
 
@@ -112,10 +117,12 @@ public class Game {
                 }
             }
             trader.setSpeak("Successfully robbed the trader.");
+            this.player.getShip().changeCargo(1);
         } else {
             this.player.getShip().changeHealth(-20);
             trader.setSpeak("Unable to rob the trader. Ship was damaged.");
         }
+        karma++;
     }
     public void negotiateTrader(Trader trader) {
         if (random.nextInt(101) > 90 - 5 * this.player.getmPoint()) {
@@ -137,6 +144,8 @@ public class Game {
             }
         }
         police.setSpeak("\"Thank you for your cooperation.\"");
+        this.player.getShip().changeCargo(-police.getSuspected().length);
+        karma--;
     }
 
     public void fleePolice(Police police, Region from) {
@@ -150,6 +159,7 @@ public class Game {
             police.setSpeak("Unable to escape. Goods were confiscated and was fined "
                 + (this.player.getCredit() * 0.3) + ".");
         }
+        karma++;
     }
 
     public void fightPolice(Police police) {
@@ -162,6 +172,7 @@ public class Game {
             police.setSpeak("Defeated by the police. The ship was damaged and was fined "
                 + (this.player.getCredit() * 0.5) + ".");
         }
+        karma++;
     }
 
     public void payBandit(Bandit bandit) {
@@ -173,9 +184,11 @@ public class Game {
                 i.setAmount(0);
             }
             bandit.setSpeak("Unable to pay the bandit. They took some supplies instead.");
+            this.player.getShip().setCargo(0);
         } else {
             this.player.getShip().changeHealth(-60);
             bandit.setSpeak("Unable to pay the bandit. They ransacked the ship.");
+            this.player.getShip().setCargo(0);
         }
     }
     public void fleeBandit(Bandit bandit, Region from) {
@@ -201,4 +214,23 @@ public class Game {
                 + "They took all the money and damaged the ship");
         }
     }
+
+    public boolean checkKarmaTrigger() {
+        return random.nextInt(21) < karma;
+    }
+
+    public void karmaConsequence() {
+        this.player.getShip().setHealth(1);
+        for (Item i: player.getShip().getInventory()) {
+            i.setAmount(0);
+        }
+        this.player.getShip().setCargo(0);
+        karma = 0;
+    }
+
+    public void refuel(int refuelAmount) {
+        this.player.changeCredit(-refuelAmount);
+        this.player.getShip().changeFuel(refuelAmount);
+    }
+
 }

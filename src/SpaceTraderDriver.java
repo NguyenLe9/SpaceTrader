@@ -2,9 +2,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.net.URL;
 import java.io.*;
 import javax.swing.JOptionPane;
+
 public class SpaceTraderDriver extends JFrame {
 
     private final JPanel contentPane;
@@ -28,6 +31,7 @@ public class SpaceTraderDriver extends JFrame {
     private int[] skillDis = new int[4];
     private String difficulty;
     private Region targetedRegion;
+    private int refuelAmount;
 
     // Launch the application.
     public static void main(final String[] args) {
@@ -313,21 +317,15 @@ public class SpaceTraderDriver extends JFrame {
     }
 
     public void setUpRegionScreen() {
-        JTextField regionName = new JTextField(game.getPlayer()
+        JTextField regionName = new JTextField("Name:\t" + game.getPlayer()
             .getCurrReg().getName());
         formatText(regionName, false, 300, 30);
-        JTextField regionTech = new JTextField("" + game.getPlayer()
+        JTextField regionTech = new JTextField("Tech Level:\t" + game.getPlayer()
             .getCurrReg().getTechLevel());
         formatText(regionTech, false, 300, 30);
-        JTextField regionCoord = new JTextField(game.getPlayer()
+        JTextField regionCoord = new JTextField("Coordinate:\t" + game.getPlayer()
             .getCurrReg().getCoord());
         formatText(regionCoord, false, 300, 30);
-
-        JPanel subRegionInfo = new JPanel();
-        subRegionInfo.setLayout(new GridLayout(0, 3));
-        subRegionInfo.add(regionName);
-        subRegionInfo.add(regionTech);
-        subRegionInfo.add(regionCoord);
 
         JButton tradeButton = new JButton("Trade");
         formatButton(tradeButton, 300, 30);
@@ -337,6 +335,47 @@ public class SpaceTraderDriver extends JFrame {
                 setUpTradeScreen();
             }
         });
+        JButton refuelButton = new JButton("Refuel");
+        formatButton(refuelButton, 300, 30);
+        refuelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                Ship ship = game.getPlayer().getShip();
+                refuelAmount = 0;
+                JSlider refuelSlider = new JSlider(0, ship.getMaxFuel() - ship.getFuel(),
+                    refuelAmount);
+                refuelSlider.setMajorTickSpacing(10);
+                refuelSlider.setMinorTickSpacing(1);
+                refuelSlider.setPaintTicks(true);
+                refuelSlider.setPaintLabels(true);
+                refuelSlider.addChangeListener(new ChangeListener() {
+                    public void stateChanged(ChangeEvent ce) {
+                        JSlider source = (JSlider) ce.getSource();
+                        if (!source.getValueIsAdjusting()) {
+                            changeRefuelVars((int) source.getValue());
+                        }
+                    }
+                });
+
+                int reply = JOptionPane.showConfirmDialog(null, new Object[]
+                    {"How much?", refuelSlider}, "Refueling", JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION) {
+                    if (refuelAmount <= game.getPlayer().getCredit()) {
+                        // System.out.println("ya pressed the yes beutton ye fool");
+                        game.refuel(refuelAmount);
+                        JOptionPane.showMessageDialog(null, "Successfully bought " + refuelAmount
+                            + " fuel for " + refuelAmount + " credits.", "Refuel Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Not enough credits. " + refuelAmount
+                            + " was needed but you only had " + game.getPlayer().getCredit()
+                            + " credits.", "Refuel Failure", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            }
+        });
+        JButton repairButton = new JButton("Repair");
+        formatButton(repairButton, 300, 30);
+        // TODO: implement repair button
         JButton travelButton = new JButton("Travel");
         formatButton(travelButton, 300, 30);
         travelButton.addActionListener(new ActionListener() {
@@ -346,30 +385,21 @@ public class SpaceTraderDriver extends JFrame {
             }
         });
 
-        JPanel playerAction = new JPanel();
-        playerAction.setLayout(new GridLayout(0, 2));
-        playerAction.add(tradeButton);
-        playerAction.add(travelButton);
-
-        JPanel regionInfo = new JPanel();
-        regionInfo.setLayout(new GridLayout(2, 1));
-        regionInfo.add(subRegionInfo);
-        regionInfo.add(playerAction);
-
         Image reg = game.getPlayer().getCurrReg().getImage().
                 getScaledInstance(300, 400, Image.SCALE_DEFAULT);
         JLabel display = new JLabel(new ImageIcon(reg));
         display.setOpaque(true);
 
-        GridBagConstraints gbc = new GridBagConstraints();
         regionScreen = new JPanel();
         regionScreen.setLayout(new GridBagLayout());
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        regionScreen.add(display, gbc);
-        gbc.gridy = 3;
-        regionScreen.add(regionInfo, gbc);
+        addWithGBC(regionScreen, display, new int[] {0, 0, 1, 3, 0, 0});
+        addWithGBC(regionScreen, regionName, new int[] {0, 3, 1, 1, 0, 0});
+        addWithGBC(regionScreen, regionTech, new int[] {0, 4, 1, 1, 0, 0});
+        addWithGBC(regionScreen, regionCoord, new int[] {0, 5, 1, 1, 0, 0});
+        addWithGBC(regionScreen, tradeButton, new int[] {1, 0, 1, 1, 0, 100});
+        addWithGBC(regionScreen, refuelButton, new int[] {1, 1, 1, 1, 0, 100});
+        addWithGBC(regionScreen, repairButton, new int[] {1, 2, 1, 1, 0, 100});
+        addWithGBC(regionScreen, travelButton, new int[] {1, 3, 1, 3, 0, 0});
         this.contentPane.add(regionScreen);
         regionScreen.setVisible(true);
     }
@@ -594,6 +624,14 @@ public class SpaceTraderDriver extends JFrame {
         confirmTravel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (targetedRegion != null) {
+                    if (game.checkKarmaTrigger()) {
+                        game.karmaConsequence();
+                        JOptionPane.showMessageDialog(
+                            null, "<html><center>A very angry moon crashed into you, heavily "
+                            + "damaging your ship. All your items are lost in the void of space. "
+                            + "<br><br>You've met with a terrible fate, haven't "
+                            + "you?</center></html>", "Bad Karma", JOptionPane.INFORMATION_MESSAGE);
+                    }
                     if (!game.checkTravel(targetedRegion)) {
                         JOptionPane.showMessageDialog(
                             null, "CANNOT TRAVEL DUE TO INSUFFICIENT FUEL",
@@ -652,21 +690,18 @@ public class SpaceTraderDriver extends JFrame {
 
         encounterScreen = new JPanel();
         encounterScreen.setLayout(new GridBagLayout());
-        addWithGBC(encounterScreen, portrait, new int[] {0, 0, 1, 1, 0, 0},
-            new Insets(0, 30, 0, 30));
-        addWithGBC(encounterScreen, dialogue, new int[] {0, 1, 1, 1, 0, 0},
-            new Insets(0, 30, 0, 30));
-        addWithGBC(encounterScreen, onwards, new int[] {1, 3, 1, 1, 0, 0});
+        addWithGBC(encounterScreen, portrait, new int[] {0, 0, 1, 3, 0, 0},
+            new Insets(0, 0, 0, 15));
+        addWithGBC(encounterScreen, dialogue, new int[] {0, 4, 1, 1, 500, 80},
+            new Insets(0, 0, 0, 15));
+        addWithGBC(encounterScreen, onwards, new int[] {1, 4, 1, 1, 0, 0});
 
         if (encounter instanceof Trader) {
             setUpTraderEcounter((Trader) encounter, from, dialogue, onwards);
-            //do trader things
         } else if (encounter instanceof Bandit) {
             setUpBanditEncounter((Bandit) encounter, from, dialogue, onwards);
-            //do bandit things
         } else if (encounter instanceof Police) {
             setUpPoliceEncounter((Police) encounter, from, dialogue, onwards);
-            //do police things
         } else {
             // Sanity check, this statement should never be reached
             JOptionPane.showMessageDialog(
@@ -714,9 +749,9 @@ public class SpaceTraderDriver extends JFrame {
                 negotiateTrader.setEnabled(false);
             }
         });
-        addWithGBC(encounterScreen, buyItems, new int[] {1, 0, 1, 1, 0, 0});
-        addWithGBC(encounterScreen, robTrader, new int[] {1, 1, 1, 1, 0, 0});
-        addWithGBC(encounterScreen, negotiateTrader, new int[] {1, 2, 1, 1, 0, 0});
+        addWithGBC(encounterScreen, buyItems, new int[] {1, 0, 1, 1, 0, 120});
+        addWithGBC(encounterScreen, robTrader, new int[] {1, 1, 1, 1, 0, 120});
+        addWithGBC(encounterScreen, negotiateTrader, new int[] {1, 2, 1, 1, 0, 120});
         // encounterScreen.setVisible(true);
     }
     public void setUpPoliceEncounter(Police police, Region from,
@@ -774,9 +809,9 @@ public class SpaceTraderDriver extends JFrame {
                 // setUpRegionScreen();
             }
         });
-        addWithGBC(encounterScreen, forfeitItems, new int[] {1, 0, 1, 1, 0, 0});
-        addWithGBC(encounterScreen, fleePolice, new int[] {1, 1, 1, 1, 0, 0});
-        addWithGBC(encounterScreen, fightPolice, new int[] {1, 2, 1, 1, 0, 0});
+        addWithGBC(encounterScreen, forfeitItems, new int[] {1, 0, 1, 1, 0, 120});
+        addWithGBC(encounterScreen, fleePolice, new int[] {1, 1, 1, 1, 0, 120});
+        addWithGBC(encounterScreen, fightPolice, new int[] {1, 2, 1, 1, 0, 120});
         // encounterScreen.setVisible(true);
     }
     public void setUpBanditEncounter(Bandit bandit, Region from,
@@ -835,9 +870,9 @@ public class SpaceTraderDriver extends JFrame {
                 // setUpRegionScreen();
             }
         });
-        addWithGBC(encounterScreen, demandBandit, new int[] {1, 0, 1, 1, 0, 0});
-        addWithGBC(encounterScreen, fleeBandit, new int[] {1, 1, 1, 1, 0, 0});
-        addWithGBC(encounterScreen, fightBandit, new int[] {1, 2, 1, 1, 0, 0});
+        addWithGBC(encounterScreen, demandBandit, new int[] {1, 0, 1, 1, 0, 120});
+        addWithGBC(encounterScreen, fleeBandit, new int[] {1, 1, 1, 1, 0, 120});
+        addWithGBC(encounterScreen, fightBandit, new int[] {1, 2, 1, 1, 0, 120});
         // encounterScreen.setVisible(true);
     }
 
@@ -960,5 +995,9 @@ public class SpaceTraderDriver extends JFrame {
         engineer.setText("" + skillDis[3]);
         prompt.setText("Skill Points: " + (skillPoints - skillDis[0]
             - skillDis[1] - skillDis[2] - skillDis[3]));
+    }
+
+    public void changeRefuelVars(int i) {
+        refuelAmount = i;
     }
 }
