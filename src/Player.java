@@ -9,15 +9,14 @@ public class Player {
     private String name;
     private Region currentRegion;
 
-    public Player(int[] skillPoint, int credit, String name,
-            Region currentRegion) {
+    public Player(int[] skillPoint, int credit, String name, Region currentRegion) {
         this.pPoint = skillPoint[0];
         this.fPoint = skillPoint[1];
         this.mPoint = skillPoint[2];
         this.ePoint = skillPoint[3];
         this.name = name;
         this.credit = credit;
-        this.ship = new Ship("Starship");
+        this.ship = new Starship();
         this.currentRegion = currentRegion;
     }
     // public Player(int[] skills, int credit, String name, Region currentRegion) {
@@ -83,5 +82,8 @@ public class Player {
 
     public void changeCredit(int credit) {
         this.credit += credit;
+    }
+    public Item[] getInventory() {
+        return ship.getInventory();
     }
 }

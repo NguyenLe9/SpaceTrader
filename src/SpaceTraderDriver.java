@@ -32,7 +32,7 @@ public class SpaceTraderDriver extends JFrame {
     private int[] skillDis = new int[4];
     private String difficulty;
     private Region targetedRegion;
-    private int refuelAmount;
+    private int reAmount;
 
     // Launch the application.
     public static void main(final String[] args) {
@@ -341,9 +341,9 @@ public class SpaceTraderDriver extends JFrame {
         refuelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 Ship ship = game.getPlayer().getShip();
-                refuelAmount = 0;
+                reAmount = 0;
                 JSlider refuelSlider = new JSlider(0, ship.getMaxFuel() - ship.getFuel(),
-                    refuelAmount);
+                    reAmount);
                 refuelSlider.setMajorTickSpacing(10);
                 refuelSlider.setMinorTickSpacing(1);
                 refuelSlider.setPaintTicks(true);
@@ -352,7 +352,7 @@ public class SpaceTraderDriver extends JFrame {
                     public void stateChanged(ChangeEvent ce) {
                         JSlider source = (JSlider) ce.getSource();
                         if (!source.getValueIsAdjusting()) {
-                            changeRefuelVars((int) source.getValue());
+                            changeReVar((int) source.getValue());
                         }
                     }
                 });
@@ -360,14 +360,13 @@ public class SpaceTraderDriver extends JFrame {
                 int reply = JOptionPane.showConfirmDialog(null, new Object[]
                     {"How much?", refuelSlider}, "Refueling", JOptionPane.YES_NO_OPTION);
                 if (reply == JOptionPane.YES_OPTION) {
-                    if (refuelAmount <= game.getPlayer().getCredit()) {
-                        // System.out.println("ya pressed the yes beutton ye fool");
-                        game.refuel(refuelAmount);
-                        JOptionPane.showMessageDialog(null, "Successfully bought " + refuelAmount
-                            + " fuel for " + refuelAmount + " credits.", "Refuel Success",
+                    if (reAmount <= game.getPlayer().getCredit()) {
+                        game.refuel(reAmount);
+                        JOptionPane.showMessageDialog(null, "Successfully bought " + reAmount
+                            + " fuel for " + reAmount + " credits.", "Refuel Success",
                             JOptionPane.INFORMATION_MESSAGE);
                     } else {
-                        JOptionPane.showMessageDialog(null, "Not enough credits. " + refuelAmount
+                        JOptionPane.showMessageDialog(null, "Not enough credits. " + reAmount
                             + " was needed but you only had " + game.getPlayer().getCredit()
                             + " credits.", "Refuel Failure", JOptionPane.INFORMATION_MESSAGE);
                     }
@@ -376,42 +375,41 @@ public class SpaceTraderDriver extends JFrame {
         });
         JButton repairButton = new JButton("Repair");
         formatButton(repairButton, 300, 30);
-        // TODO: implement repair button
-	repairButton.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent ae) {
-		    Ship ship = game.getPlayer().getShip();
-		    int repairAmount = 0;
-		    JSlider refuelSlider = new JSlider(0, ship.getMaxHealth() - ship.getHealth(),
-						       repairAmount);
-		    refuelSlider.setMajorTickSpacing(10);
-		    refuelSlider.setMinorTickSpacing(1);
-		    refuelSlider.setPaintTicks(true);
-		    refuelSlider.setPaintLabels(true);
-		    refuelSlider.addChangeListener(new ChangeListener() {
-			    public void stateChanged(ChangeEvent ce) {
-				JSlider source = (JSlider) ce.getSource();
-				if (!source.getValueIsAdjusting()) {
-				    changeRefuelVars((int) source.getValue());
-				}
-			    }
-			});
+        repairButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                Ship ship = game.getPlayer().getShip();
+                reAmount = 0;
+                JSlider refuelSlider = new JSlider(0, ship.getMaxHealth() - ship.getHealth(),
+                                   reAmount);
+                refuelSlider.setMajorTickSpacing(10);
+                refuelSlider.setMinorTickSpacing(1);
+                refuelSlider.setPaintTicks(true);
+                refuelSlider.setPaintLabels(true);
+                refuelSlider.addChangeListener(new ChangeListener() {
+                    public void stateChanged(ChangeEvent ce) {
+                        JSlider source = (JSlider) ce.getSource();
+                        if (!source.getValueIsAdjusting()) {
+                            changeReVar((int) source.getValue());
+                       }
+                    }
+                });
 
-		    int reply = JOptionPane.showConfirmDialog(null, new Object[]
-                        {"How much?", refuelSlider}, "Repairing", JOptionPane.YES_NO_OPTION);
-		    if (reply == JOptionPane.YES_OPTION) {
-			if (repairAmount <= game.getPlayer().getCredit()) {
-			    game.repair(repairAmount);
-			    JOptionPane.showMessageDialog(null, "Successfully bought " + repairAmount
-							  + " health for " + repairAmount + " credits.", "Repair Success",
-							  JOptionPane.INFORMATION_MESSAGE);
-			} else {
-			    JOptionPane.showMessageDialog(null, "Not enough credits. " + repairAmount
-							  + " was needed but you only had " + game.getPlayer().getCredit()
-							  + " credits.", "Repair Failure", JOptionPane.INFORMATION_MESSAGE);
-			}
-		    }
-		}
-	    });
+                int reply = JOptionPane.showConfirmDialog(null, new Object[]
+                    {"How much?", refuelSlider}, "Repairing", JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION) {
+                    if (reAmount <= game.getPlayer().getCredit()) {
+                        game.repair(reAmount);
+                        JOptionPane.showMessageDialog(null, "Successfully bought "
+                            + game.repairModifier(reAmount) + " health for " + reAmount
+                            + " credits.", "Repair Success", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Not enough credits. " + reAmount
+                            + " was needed but you only had " + game.getPlayer().getCredit()
+                            + " credits.", "Repair Failure", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            }
+        });
         JButton travelButton = new JButton("Travel");
         formatButton(travelButton, 300, 30);
         travelButton.addActionListener(new ActionListener() {
@@ -746,7 +744,7 @@ public class SpaceTraderDriver extends JFrame {
         }
         this.contentPane.add(encounterScreen);
         encounterScreen.setVisible(true);
-	if (!game.checkSufficientHealth()) {
+    if (!game.checkSufficientHealth()) {
             setUpGameOverScreen(encounterScreen);
         }
     }
@@ -1036,8 +1034,8 @@ public class SpaceTraderDriver extends JFrame {
             - skillDis[1] - skillDis[2] - skillDis[3]));
     }
 
-    public void changeRefuelVars(int i) {
-        refuelAmount = i;
+    public void changeReVar(int i) {
+        reAmount = i;
     }
     public void setUpGameOverScreen(JPanel currScreen) {
         currScreen.setVisible(false);
@@ -1048,16 +1046,16 @@ public class SpaceTraderDriver extends JFrame {
         JButton restartGame = new JButton("RESTART");
         formatButton(restartGame, 0, 0);
         restartGame.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-		    SpaceTraderDriver spacetrade = new SpaceTraderDriver();
-		    spacetrade.setVisible(true);
-		}
-	    });
+        public void actionPerformed(ActionEvent e) {
+            SpaceTraderDriver spacetrade = new SpaceTraderDriver();
+            spacetrade.setVisible(true);
+        }
+        });
 
         gameOverScreen = new JPanel();
         gameOverScreen.setLayout(new GridBagLayout());
         addWithGBC(gameOverScreen, gameOver, new int[] {0, 1, 1, 1, 0, 0},
-		   new Insets(0, 30, 0, 30));
+           new Insets(0, 30, 0, 30));
         addWithGBC(gameOverScreen, restartGame, new int[] {0, 3, 1, 1, 0, 0});
 
 

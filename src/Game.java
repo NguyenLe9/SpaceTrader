@@ -237,7 +237,11 @@ public class Game {
         return (ship.getHealth() > 0);
     }
     public void repair(int repairAmount) {
-	this.player.changeCredit(-repairAmount);
-	this.player.getShip().changeHealth(repairAmount);
+        // this.player.changeCredit(-repairAmount);
+        this.player.changeCredit((int) (-repairModifier(repairAmount)));
+        this.player.getShip().changeHealth(repairAmount);
+    }
+    public int repairModifier(int repairAmount) {
+        return (int) (repairAmount / Math.sqrt(player.getePoint() + 1));
     }
 }
