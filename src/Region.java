@@ -34,16 +34,20 @@ public class Region {
     private Image image;
     private static int regNum = 0;
 
-    public Region() {
+    public Region(boolean special, String playerName) {
         try {
             this.x = generateCoords(Universe.getXCoord());
             this.y = generateCoords(Universe.getYCoord());
             this.techLevel = generateTechLevel();
             this.name = generateName();
             this.index = regNum;
-            this.market = new Market(techToInt(this.techLevel));
+            if (!special) {
+                this.market = new Market(techToInt(this.techLevel),special,null);
+            } else {
+                this.market = new Market(techToInt(this.techLevel),special,playerName);
+            }
             this.image = javax.imageio.ImageIO.read(
-                    new File("Graphics/reg" + regNum + ".jpg"));
+						    new File("Graphics/reg" + regNum + ".jpg"));
             regNum++;
         } catch (java.io.IOException e) {
             e.printStackTrace();

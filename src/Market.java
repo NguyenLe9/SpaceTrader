@@ -11,20 +11,36 @@ public class Market {
                                          {150, 130, 20, 13, 0, 0, 0, 3, 0, 0, 0, 0, 0},
                                          {50, 150, 50, 50, 0, 0, 0, 3, 0, 0, 0, 0, 0}};
 
-    public Market(int tech) {
-        this.item = new Item[] {new Item("Food", 1 * tech, avail[tech - 1][0]),
-                                new Item("Wood", 3 * tech, avail[tech - 1][1]),
-                                new Item("Iron", 15 * tech, avail[tech - 1][2]),
-                                new Item("Gold", 50 * tech, avail[tech - 1][3]),
-                                new Item("Balloons", 5 * tech, avail[tech - 1][4]),
-                                new Item("Fancy Painting", 150 * tech, avail[tech - 1][5]),
-                                new Item("Generators", 30 * tech, avail[tech - 1][6]),
-                                new Item("Medicine", 50 * tech, avail[tech - 1][7]),
-                                new Item("Computer", 100 * tech, avail[tech - 1][8]),
-                                new Item("Super Computer", 500 * tech, avail[tech - 1][9]),
-                                new Item("HAL 1999", 1999 * tech, avail[tech - 1][10]),
-                                new Item("Lightsabers", 9999 * tech, avail[tech - 1][11]),
-                                new Item("Unobtainium", 1000000 * tech, avail[tech - 1][12])};
+    public Market(int tech, boolean winningItem, String name) {
+	if (!winningItem) {
+            this.item = new Item[]{new Item("Food", 1 * tech, avail[tech - 1][0]),
+				   new Item("Wood", 3 * tech, avail[tech - 1][1]),
+				   new Item("Iron", 15 * tech, avail[tech - 1][2]),
+				   new Item("Gold", 50 * tech, avail[tech - 1][3]),
+				   new Item("Balloons", 5 * tech, avail[tech - 1][4]),
+				   new Item("Fancy Painting", 150 * tech, avail[tech - 1][5]),
+				   new Item("Generators", 30 * tech, avail[tech - 1][6]),
+				   new Item("Medicine", 50 * tech, avail[tech - 1][7]),
+				   new Item("Computer", 100 * tech, avail[tech - 1][8]),
+				   new Item("Super Computer", 500 * tech, avail[tech - 1][9]),
+				   new Item("HAL 1999", 1999 * tech, avail[tech - 1][10]),
+				   new Item("Lightsabers", 9999 * tech, avail[tech - 1][11]),
+				   new Item("Unobtainium", 1000000 * tech, avail[tech - 1][12])};
+        } else {
+            this.item = new Item[]{new Item("Food", 1 * tech, avail[tech - 1][0]),
+				   new Item("Wood", 3 * tech, avail[tech - 1][1]),
+				   new Item("Iron", 15 * tech, avail[tech - 1][2]),
+				   new Item("Gold", 50 * tech, avail[tech - 1][3]),
+				   new Item("Balloons", 5 * tech, avail[tech - 1][4]),
+				   new Item("Fancy Painting", 150 * tech, avail[tech - 1][5]),
+				   new Item("Generators", 30 * tech, avail[tech - 1][6]),
+				   new Item("Medicine", 50 * tech, avail[tech - 1][7]),
+				   new Item("Computer", 100 * tech, avail[tech - 1][8]),
+				   new Item("Super Computer", 500 * tech, avail[tech - 1][9]),
+				   new Item("HAL 1999", 1999 * tech, avail[tech - 1][10]),
+				   new Item("Lightsabers", 9999 * tech, avail[tech - 1][11]),
+				   new Item(name + "'s Universe", 1000002 * tech, 1)};
+        }  
     }
 
     public Item[] getItem() {

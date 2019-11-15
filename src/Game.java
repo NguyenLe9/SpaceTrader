@@ -7,9 +7,9 @@ public class Game {
     private Random random = new Random();
     private static int karma = 0;
 
-    public Game(int[] skills, int credit, String difficulty) {
-        this.universe = Universe.getUniverse();
-        this.player = new Player(skills, credit, "Spock", universe.pickRandomRegion());
+    public Game(int[] skills, int credit, String difficulty, String playerName) {
+        this.universe = Universe.getUniverse(playerName);
+        this.player = new Player(skills, credit, playerName, universe.pickRandomRegion());
         this.setDifficulty(difficulty);
     }
 
@@ -232,5 +232,12 @@ public class Game {
         this.player.changeCredit(-refuelAmount);
         this.player.getShip().changeFuel(refuelAmount);
     }
-
+    public boolean checkSufficientHealth() {
+        Ship ship = this.player.getShip();
+        return (ship.getHealth() > 0);
+    }
+    public void repair(int repairAmount) {
+	this.player.changeCredit(-repairAmount);
+	this.player.getShip().changeHealth(repairAmount);
+    }
 }

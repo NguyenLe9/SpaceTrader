@@ -72,7 +72,7 @@ public class Ship {
     public void changeFuel(int i) {
         this.fuel += i;
     }
-
+    
     public void changeHealth(int i) {
         this.health += i;
     }

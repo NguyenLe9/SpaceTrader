@@ -22,19 +22,25 @@ public class Universe {
 
     private static Universe newUniverse = null;
 
-    private Universe() {
+    private Universe(String playerName) {
         coordinatesHelper();
         regions = new ArrayList<>();
+        int random = (int)(Math.random() * ((9 - 0) + 1)) + 0;
         for (int i = 0; i < 10; i++) {
-            Region newRegion = new Region();
+            Region newRegion;
+            if (i == random) {
+                newRegion = new Region(true, playerName);
+            } else {
+                newRegion = new Region(false, null);
+            }
             // newRegion.setIndex(i);
             regions.add(newRegion);
         }
     }
 
-    public static Universe getUniverse() {
+    public static Universe getUniverse(String playerName) {
         if (newUniverse == null) {
-            newUniverse = new Universe();
+            newUniverse = new Universe(playerName);
         }
         return newUniverse;
     }
