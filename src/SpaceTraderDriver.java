@@ -33,7 +33,7 @@ public class SpaceTraderDriver extends JFrame {
     private String difficulty;
     private Region targetedRegion;
     private int refuelAmount;
-
+    private JPanel winningScreen;
     // Launch the application.
     public static void main(final String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -380,7 +380,7 @@ public class SpaceTraderDriver extends JFrame {
 	repairButton.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent ae) {
 		    Ship ship = game.getPlayer().getShip();
-		    int repairAmount = 0;
+		    int repairAmount = ship.getMaxHealth() - ship.getHealth();
 		    JSlider refuelSlider = new JSlider(0, ship.getMaxHealth() - ship.getHealth(),
 						       repairAmount);
 		    refuelSlider.setMajorTickSpacing(10);
@@ -510,6 +510,9 @@ public class SpaceTraderDriver extends JFrame {
                     if (items[index].getPrice() <= game.getPlayer().getCredit()
                             && items[index].getAmount() > 0
                             && ship.getCargo() <= ship.getMaxCargo()) {
+			if (items[index].getName().equals(name + "'s Universe")) {
+                            setUpWinningScreen(tradeScreen);
+                        }
                         items[index].changeAmount(-1);
                         itemBuyAmount.setText("" + items[index].getAmount());
                         inventory[index].changeAmount(1);
@@ -1063,5 +1066,30 @@ public class SpaceTraderDriver extends JFrame {
 
         this.contentPane.add(gameOverScreen);
         gameOverScreen.setVisible(true);
+    }
+    public void setUpWinningScreen(JPanel tradeScreen) {
+        tradeScreen.setVisible(false);
+
+
+        JTextField gameOver = new JTextField("CONGRATULATIONS!! YOU WIN THE GAME");
+        formatText(gameOver, false, 300, 30);
+        JButton restartGame = new JButton("Click to play it again :)");
+        formatButton(restartGame, 0, 0);
+        restartGame.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+		    SpaceTraderDriver spacetrade = new SpaceTraderDriver();
+		    spacetrade.setVisible(true);
+		}
+	    });
+
+        winningScreen = new JPanel();
+        winningScreen.setLayout(new GridBagLayout());
+        addWithGBC(winningScreen, gameOver, new int[] {0, 1, 1, 1, 0, 0},
+		   new Insets(0, 30, 0, 30));
+        addWithGBC(winningScreen, restartGame, new int[] {1, 3, 1, 1, 0, 0});
+
+
+        this.contentPane.add(winningScreen);
+        winningScreen.setVisible(true);
     }
 }
