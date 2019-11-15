@@ -5,7 +5,7 @@ public class Game {
     private Player player;
     private String difficulty;
     private Random random = new Random();
-    private static int karma = 0;
+    private static int karma = 50;
 
     public Game(int[] skills, int credit, String difficulty, String playerName) {
         this.universe = Universe.getUniverse(playerName);

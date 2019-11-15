@@ -7,18 +7,18 @@ public abstract class Ship {
     private int health;
     private int maxHealth;
     private Item[] inventory = new Item[] {new Item("Food", 0, 0),
-                                     new Item("Wood", 0, 0),
-                                     new Item("Iron", 0, 0),
-                                     new Item("Gold", 0, 0),
-                                     new Item("Balloons", 0, 0),
-                                     new Item("Fancy Painting", 0, 0),
-                                     new Item("Generators", 0, 0),
-                                     new Item("Medicine", 0, 0),
-                                     new Item("Computer", 0, 0),
-                                     new Item("Super Computer", 0, 0),
-                                     new Item("HAL 1999", 0, 0),
-                                     new Item("Lightsabers", 0, 0),
-                                     new Item("Unobtainium", 0, 0)};;
+                                           new Item("Wood", 0, 0),
+                                           new Item("Iron", 0, 0),
+                                           new Item("Gold", 0, 0),
+                                           new Item("Balloons", 0, 0),
+                                           new Item("Fancy Painting", 0, 0),
+                                           new Item("Generators", 0, 0),
+                                           new Item("Medicine", 0, 0),
+                                           new Item("Computer", 0, 0),
+                                           new Item("Super Computer", 0, 0),
+                                           new Item("HAL 1999", 0, 0),
+                                           new Item("Lightsabers", 0, 0),
+                                           new Item("Unobtainium", 0, 0)};;
 
     protected void setMax() {
         maxCargo = this.cargo;

@@ -25,7 +25,7 @@ public class Universe {
     private Universe(String playerName) {
         coordinatesHelper();
         regions = new ArrayList<>();
-        int random = (int)(Math.random() * ((9 - 0) + 1)) + 0;
+        int random = (int) (Math.random() * ((9 - 0) + 1)) + 0;
         for (int i = 0; i < 10; i++) {
             Region newRegion;
             if (i == random) {

@@ -42,12 +42,12 @@ public class Region {
             this.name = generateName();
             this.index = regNum;
             if (!special) {
-                this.market = new Market(techToInt(this.techLevel),special,null);
+                this.market = new Market(techToInt(this.techLevel), special, null);
             } else {
-                this.market = new Market(techToInt(this.techLevel),special,playerName);
+                this.market = new Market(techToInt(this.techLevel), special, playerName);
             }
             this.image = javax.imageio.ImageIO.read(
-						    new File("Graphics/reg" + regNum + ".jpg"));
+                            new File("Graphics/reg" + regNum + ".jpg"));
             regNum++;
         } catch (java.io.IOException e) {
             e.printStackTrace();

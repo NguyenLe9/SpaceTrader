@@ -391,7 +391,7 @@ public class SpaceTraderDriver extends JFrame {
                         JSlider source = (JSlider) ce.getSource();
                         if (!source.getValueIsAdjusting()) {
                             changeReVar((int) source.getValue());
-                       }
+                        }
                     }
                 });
 
@@ -509,7 +509,7 @@ public class SpaceTraderDriver extends JFrame {
                     if (items[index].getPrice() <= game.getPlayer().getCredit()
                             && items[index].getAmount() > 0
                             && ship.getCargo() <= ship.getMaxCargo()) {
-			if (items[index].getName().equals(name + "'s Universe")) {
+                        if (items[index].getName().equals(name + "'s Universe")) {
                             setUpWinningScreen(tradeScreen);
                         }
                         items[index].changeAmount(-1);
@@ -748,7 +748,7 @@ public class SpaceTraderDriver extends JFrame {
         }
         this.contentPane.add(encounterScreen);
         encounterScreen.setVisible(true);
-    if (!game.checkSufficientHealth()) {
+        if (!game.checkSufficientHealth()) {
             setUpGameOverScreen(encounterScreen);
         }
     }
@@ -1050,16 +1050,16 @@ public class SpaceTraderDriver extends JFrame {
         JButton restartGame = new JButton("RESTART");
         formatButton(restartGame, 0, 0);
         restartGame.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            SpaceTraderDriver spacetrade = new SpaceTraderDriver();
-            spacetrade.setVisible(true);
-        }
+            public void actionPerformed(ActionEvent e) {
+                SpaceTraderDriver spacetrade = new SpaceTraderDriver();
+                spacetrade.setVisible(true);
+            }
         });
 
         gameOverScreen = new JPanel();
         gameOverScreen.setLayout(new GridBagLayout());
         addWithGBC(gameOverScreen, gameOver, new int[] {0, 1, 1, 1, 0, 0},
-           new Insets(0, 30, 0, 30));
+            new Insets(0, 30, 0, 30));
         addWithGBC(gameOverScreen, restartGame, new int[] {0, 3, 1, 1, 0, 0});
 
 
@@ -1075,16 +1075,16 @@ public class SpaceTraderDriver extends JFrame {
         JButton restartGame = new JButton("Click to play it again :)");
         formatButton(restartGame, 0, 0);
         restartGame.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-		    SpaceTraderDriver spacetrade = new SpaceTraderDriver();
-		    spacetrade.setVisible(true);
-		}
-	    });
+            public void actionPerformed(ActionEvent e) {
+                SpaceTraderDriver spacetrade = new SpaceTraderDriver();
+                spacetrade.setVisible(true);
+            }
+        });
 
         winningScreen = new JPanel();
         winningScreen.setLayout(new GridBagLayout());
         addWithGBC(winningScreen, gameOver, new int[] {0, 1, 1, 1, 0, 0},
-		   new Insets(0, 30, 0, 30));
+            new Insets(0, 30, 0, 30));
         addWithGBC(winningScreen, restartGame, new int[] {1, 3, 1, 1, 0, 0});
 
 
